@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Özaydeniz Sitesi Yönetim Paneli</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        /* Login Ekranı */
+        .login-container {
+            max-width: 450px;
+            margin: 100px auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .login-form label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: #5568d3;
+        }
+
+        .login-error {
+            display: none;
+            padding: 12px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header-left h1 {
+            font-size: 26px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .menu-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-btn {
+            padding: 25px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+
+        .menu-btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-aidat { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .btn-gider { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
+        .btn-daire { background: linear-gradient(135deg, #4776e6 0%, #8e54e9 100%); }
+        .btn-rapor { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            font-size: 15px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .export-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .export-btn:hover {
+            background: #218838;
+        }
+
+        .filters {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .filters h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            padding: 14px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .submit-btn:hover {
+            background: #5568d3;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .delete-btn {
+            padding: 6px 12px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .summary-card .amount {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .card-green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .card-red { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
+        .card-blue { background: linear-gradient(135deg, #4776e6 0%, #8e54e9 100%); }
+
+        .success-message {
+            display: none;
+            padding: 15px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Ekranı -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-header">
+            <h1>🏢 Özaydeniz Sitesi</h1>
+            <p>Site Yönetim Paneli</p>
+        </div>
+        
+        <div class="login-error" id="loginError">Kullanıcı adı veya şifre hatalı!</div>
+        
+        <form class="login-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>Kullanıcı Adı</label>
+                <input type="text" id="loginUsername" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label>Şifre</label>
+                <input type="password" id="loginPassword" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="login-btn">Giriş Yap</button>
+        </form>
+    </div>
+
+    <!-- Ana Panel -->
+    <div id="mainPanel" class="container" style="display: none;">
+        <div class="header">
+            <div class="header-left">
+                <h1>🏢 Özaydeniz Sitesi</h1>
+                <p>Site Yönetim Paneli</p>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>
+        </div>
+
+        <!-- Ana Menü -->
+        <div id="mainMenu" class="section active">
+            <div class="menu-buttons">
+                <button class="menu-btn btn-aidat" onclick="showSection('aidat')">
+                    💰 Aidat İşlemleri
+                </button>
+                <button class="menu-btn btn-gider" onclick="showSection('gider')">
+                    📝 Gider Ekle
+                </button>
+                <button class="menu-btn btn-daire" onclick="showSection('daire')">
+                    🏠 Daire Bilgileri
+                </button>
+                <button class="menu-btn btn-rapor" onclick="showSection('rapor')">
+                    📊 Raporlar
+                </button>
+            </div>
+        </div>
+
+        <!-- Aidat İşlemleri -->
+        <div id="aidat" class="section">
+            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
+            
+            <div class="section-header">
+                <h2>Aidat Ödemesi Kaydet</h2>
+                <button class="export-btn" onclick="exportAidatToExcel()">📊 Excel'e Aktar</button>
+            </div>
+            
+            <div class="success-message" id="aidatSuccess">Aidat ödemesi kaydedildi!</div>
+
+            <form onsubmit="saveAidat(event)">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label>Blok Seçin:</label>
+                        <select id="aidatBlok" required>
+                            <option value="">Blok Seçin</option>
+                            <option value="A">A Blok</option>
+                            <option value="B">B Blok</option>
+                            <option value="C">C Blok</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Daire No:</label>
+                        <select id="aidatDaire" required>
+                            <option value="">Önce Blok Seçin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ay:</label>
+                        <select id="aidatAy" required>
+                            <option value="">Ay Seçin</option>
+                            <option value="Ocak">Ocak</option>
+                            <option value="Şubat">Şubat</option>
+                            <option value="Mart">Mart</option>
+                            <option value="Nisan">Nisan</option>
+                            <option value="Mayıs">Mayıs</option>
+                            <option value="Haziran">Haziran</option>
+                            <option value="Temmuz">Temmuz</option>
+                            <option value="Ağustos">Ağustos</option>
+                            <option value="Eylül">Eylül</option>
+                            <option value="Ekim">Ekim</option>
+                            <option value="Kasım">Kasım</option>
+                            <option value="Aralık">Aralık</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tutar (₺):</label>
+                        <input type="number" id="aidatTutar" required step="0.01" placeholder="Örnek: 500">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tarih:</label>
+                        <input type="date" id="aidatTarih" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Ödemeyi Kaydet</button>
+            </form>
+
+            <div class="filters">
+                <h3>🔍 Filtreleme</h3>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Blok</label>
+                        <select id="filterAidatBlok" onchange="filterAidatTable()">
+                            <option value="">Tümü</option>
+                            <option value="A">A Blok</option>
+                            <option value="B">B Blok</option>
+                            <option value="C">C Blok</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Ay</label>
+                        <select id="filterAidatAy" onchange="filterAidatTable()">
+                            <option value="">Tümü</option>
+                            <option value="Ocak">Ocak</option>
+                            <option value="Şubat">Şubat</option>
+                            <option value="Mart">Mart</option>
+                            <option value="Nisan">Nisan</option>
+                            <option value="Mayıs">Mayıs</option>
+                            <option value="Haziran">Haziran</option>
+                            <option value="Temmuz">Temmuz</option>
+                            <option value="Ağustos">Ağustos</option>
+                            <option value="Eylül">Eylül</option>
+                            <option value="Ekim">Ekim</option>
+                            <option value="Kasım">Kasım</option>
+                            <option value="Aralık">Aralık</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Daire</label>
+                        <input type="number" id="filterAidatDaire" placeholder="Daire No" min="1" max="12" onchange="filterAidatTable()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3 style="font-size: 18px; margin-bottom: 15px;">Aidat Ödemeleri</h3>
+                <table id="aidatTable">
+                    <thead>
+                        <tr>
+                            <th>Tarih</th>
+                            <th>Blok</th>
+                            <th>Daire</th>
+                            <th>Ay</th>
+                            <th>Tutar</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="aidatTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Gider Ekle -->
+        <div id="gider" class="section">
+            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
+            
+            <div class="section-header">
+                <h2>Yeni Gider Ekle</h2>
+                <button class="export-btn" onclick="exportGiderToExcel()">📊 Excel'e Aktar</button>
+            </div>
+            
+            <div class="success-message" id="giderSuccess">Gider kaydedildi!</div>
+
+            <form onsubmit="saveGider(event)">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label>Gider Türü:</label>
+                        <select id="giderTur" required>
+                            <option value="">Gider Türü Seçin</option>
+                            <option value="Asansör Giderleri">Asansör Giderleri</option>
+                            <option value="Bina Temizlik">Bina Temizlik</option>
+                            <option value="Bahçe Bakımı">Bahçe Bakımı</option>
+                            <option value="Su Arıtma Tuz">Su Arıtma Tuz Gideri</option>
+                            <option value="Hidrofor Bakım">Hidrofor Sistemi Bakım</option>
+                            <option value="Elektrik">Elektrik Gideri</option>
+                            <option value="Su">Su Gideri</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tutar (₺):</label>
+                        <input type="number" id="giderTutar" required step="0.01" placeholder="Örnek: 1500">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tarih:</label>
+                        <input type="date" id="giderTarih" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Açıklama:</label>
+                    <textarea id="giderAciklama" rows="2" placeholder="Gider detaylarını yazın..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Gideri Kaydet</button>
+            </form>
+
+            <div class="filters">
+                <h3>🔍 Filtreleme</h3>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Gider Türü</label>
+                        <select id="filterGiderTur" onchange="filterGiderTable()">
+                            <option value="">Tümü</option>
+                            <option value="Asansör Giderleri">Asansör Giderleri</option>
+                            <option value="Bina Temizlik">Bina Temizlik</option>
+                            <option value="Bahçe Bakımı">Bahçe Bakımı</option>
+                            <option value="Su Arıtma Tuz">Su Arıtma Tuz Gideri</option>
+                            <option value="Hidrofor Bakım">Hidrofor Sistemi Bakım</option>
+                            <option value="Elektrik">Elektrik Gideri</option>
+                            <option value="Su">Su Gideri</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Başlangıç Tarihi</label>
+                        <input type="date" id="filterGiderBaslangic" onchange="filterGiderTable()">
+                    </div>
+                    <div class="filter-group">
+                        <label>Bitiş Tarihi</label>
+                        <input type="date" id="filterGiderBitis" onchange="filterGiderTable()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3 style="font-size: 18px; margin-bottom: 15px;">Gider Listesi</h3>
+                <table id="giderTable">
+                    <thead>
+                        <tr>
+                            <th>Tarih</th>
+                            <th>Gider Türü</th>
+                            <th>Açıklama</th>
+                            <th>Tutar</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="giderTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Daire Bilgileri -->
+        <div id="daire" class="section">
+            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
+            
+            <div class="section-header">
+                <h2>Daire Bilgileri</h2>
+                <button class="export-btn" onclick="exportDaireToExcel()">📊 Excel'e Aktar</button>
+            </div>
+            
+            <div class="success-message" id="daireSuccess">Daire bilgisi güncellendi!</div>
+
+            <form onsubmit="saveDaire(event)">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label>Blok:</label>
+                        <select id="daireBlok" required>
+                            <option value="">Blok Seçin</option>
+                            <option value="A">A Blok</option>
+                            <option value="B">B Blok</option>
+                            <option value="C">C Blok</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Daire No:</label>
+                        <select id="daireNo" required>
+                            <option value="">Önce Blok Seçin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ev Sahibi Adı:</label>
+                        <input type="text" id="daireEvSahibi" placeholder="Örnek: Ahmet Yılmaz">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Telefon:</label>
+                        <input type="tel" id="daireTelefon" placeholder="Örnek: 0532 123 45 67">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Bilgiyi Kaydet</button>
+            </form>
+
+            <div class="filters">
+                <h3>🔍 Filtreleme</h3>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Blok</label>
+                        <select id="filterDaireBlok" onchange="filterDaireTable()">
+                            <option value="">Tümü</option>
+                            <option value="A">A Blok</option>
+                            <option value="B">B Blok</option>
+                            <option value="C">C Blok</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Daire No</label>
+                        <input type="number" id="filterDaireNo" placeholder="Daire No" min="1" max="12" onchange="filterDaireTable()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3 style="font-size: 18px; margin-bottom: 15px;">Tüm Daireler</h3>
+                <table id="daireTable">
+                    <thead>
+                        <tr>
+                            <th>Blok</th>
+                            <th>Daire No</th>
+                            <th>Ev Sahibi</th>
+                            <th>Telefon</th>
+                        </tr>
+                    </thead>
+                    <tbody id="daireTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Raporlar -->
+        <div id="rapor" class="section">
+            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
+            
+            <div class="section-header">
+                <h2>Genel Durum</h2>
+                <button class="export-btn" onclick="exportRaporToExcel()">📊 Tam Rapor Excel'e Aktar</button>
+            </div>
+
+            <div class="summary-cards">
+                <div class="summary-card card-green">
+                    <h3>Toplam Aidat Geliri</h3>
+                    <div class="amount" id="toplamAidat">0 ₺</div>
+                </div>
+                <div class="summary-card card-red">
+                    <h3>Toplam Gider</h3>
+                    <div class="amount" id="toplamGider">0 ₺</div>
+                </div>
+                <div class="summary-card card-blue">
+                    <h3>Kasa Durumu</h3>
+                    <div class="amount" id="kasaDurum">0 ₺</div>
+                </div>
+            </div>
+
+            <div class="filters">
+                <h3>🔍 Rapor Filtreleme</h3>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Ay</label>
+                        <select id="filterRaporAy" onchange="updateRaporlar()">
+                            <option value="">Tüm Zamanlar</option>
+                            <option value="Ocak">Ocak</option>
+                            <option value="Şubat">Şubat</option>
+                            <option value="Mart">Mart</option>
+                            <option value="Nisan">Nisan</option>
+                            <option value="Mayıs">Mayıs</option>
+                            <option value="Haziran">Haziran</option>
+                            <option value="Temmuz">Temmuz</option>
+                            <option value="Ağustos">Ağustos</option>
+                            <option value="Eylül">Eylül</option>
+                            <option value="Ekim">Ekim</option>
+                            <option value="Kasım">Kasım</option>
+                            <option value="Aralık">Aralık</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Blok</label>
+                        <select id="filterRaporBlok" onchange="updateRaporlar()">
+                            <option value="">Tümü</option>
+                            <option value="A">A Blok</option>
+                            <option value="B">B Blok</option>
+                            <option value="C">C Blok</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 18px; margin-top: 30px; margin-bottom: 15px;">Gider Türlerine Göre Dağılım</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Gider Türü</th>
+                            <th>Toplam Tutar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="giderDagılımBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="font-size: 18px; margin-top: 30px; margin-bottom: 15px;">Blok Bazında Aidat Özeti</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Blok</th>
+                            <th>Toplam Aidat</th>
+                            <th>Ödeme Sayısı</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blokAidatBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Kullanıcı bilgileri
+        const validUsername = "HAYRETTİN SELİM DİNSEL";
+        const validPassword = "meteozandefne";
+
+        // Login kontrolü
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (username === validUsername && password === validPassword) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainPanel').style.display = 'block';
+                localStorage.setItem('isLoggedIn', 'true');
+            } else {
+                document.getElementById('loginError').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('loginError').classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Logout
+        function handleLogout() {
+            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
+                localStorage.removeItem('isLoggedIn');
+                document.getElementById('loginScreen').style.display = 'block';
+                document.getElementById('mainPanel').style.display = 'none';
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+
+        // Sayfa yüklendiğinde login kontrolü
+        window.onload = function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainPanel').style.display = 'block';
+            }
+            
+            initializeDaireler();
+            updateAllTables();
+            updateRaporlar();
+        };
+
+        // Veri saklama
+        let aidatlar = JSON.parse(localStorage.getItem('aidatlar') || '[]');
+        let giderler = JSON.parse(localStorage.getItem('giderler') || '[]');
+        let daireler = JSON.parse(localStorage.getItem('daireler') || '[]');
+
+        // Daireleri başlat
+        function initializeDaireler() {
+            if (daireler.length === 0) {
+                const bloklar = ['A', 'B', 'C'];
+                bloklar.forEach(blok => {
+                    for (let i = 1; i <= 12; i++) {
+                        daireler.push({
+                            blok: blok,
+                            no: i,
+                            evSahibi: '',
+                            telefon: ''
+                        });
+                    }
+                });
+                localStorage.setItem('daireler', JSON.stringify(daireler));
+            }
+        }
+
+        // Blok seçildiğinde daire listesini güncelle
+        document.getElementById('aidatBlok')?.addEventListener('change', function() {
+            updateDaireSelect('aidatDaire', this.value);
+        });
+
+        document.getElementById('daireBlok')?.addEventListener('change', function() {
+            updateDaireSelect('daireNo', this.value);
+        });
+
+        function updateDaireSelect(selectId, blok) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Daire Seçin</option>';
+            
+            if (blok) {
+                for (let i = 1; i <= 12; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i;
+                    select.appendChild(option);
+                }
+            }
+        }
+
+        // Bölüm göster
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            if (sectionId === 'rapor') {
+                updateRaporlar();
+            }
+        }
+
+        // Aidat kaydet
+        function saveAidat(event) {
+            event.preventDefault();
+            
+            const aidat = {
+                id: Date.now(),
+                tarih: document.getElementById('aidatTarih').value,
+                blok: document.getElementById('aidatBlok').value,
+                daire: document.getElementById('aidatDaire').value,
+                ay: document.getElementById('aidatAy').value,
+                tutar: parseFloat(document.getElementById('aidatTutar').value)
+            };
+
+            aidatlar.push(aidat);
+            localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
+            
+            showSuccessMessage('aidatSuccess');
+            event.target.reset();
+            filterAidatTable();
+        }
+
+        // Gider kaydet
+        function saveGider(event) {
+            event.preventDefault();
+            
+            const gider = {
+                id: Date.now(),
+                tarih: document.getElementById('giderTarih').value,
+                tur: document.getElementById('giderTur').value,
+                aciklama: document.getElementById('giderAciklama').value,
+                tutar: parseFloat(document.getElementById('giderTutar').value)
+            };
+
+            giderler.push(gider);
+            localStorage.setItem('giderler', JSON.stringify(giderler));
+            
+            showSuccessMessage('giderSuccess');
+            event.target.reset();
+            filterGiderTable();
+        }
+
+        // Daire kaydet
+        function saveDaire(event) {
+            event.preventDefault();
+            
+            const blok = document.getElementById('daireBlok').value;
+            const no = parseInt(document.getElementById('daireNo').value);
+            const evSahibi = document.getElementById('daireEvSahibi').value;
+            const telefon = document.getElementById('daireTelefon').value;
+
+            const index = daireler.findIndex(d => d.blok === blok && d.no === no);
+            if (index !== -1) {
+                daireler[index].evSahibi = evSahibi;
+                daireler[index].telefon = telefon;
+                localStorage.setItem('daireler', JSON.stringify(daireler));
+                
+                showSuccessMessage('daireSuccess');
+                event.target.reset();
+                filterDaireTable();
+            }
+        }
+
+        // Başarı mesajı göster
+        function showSuccessMessage(id) {
+            const msg = document.getElementById(id);
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 3000);
+        }
+
+        // Filtreleme fonksiyonları
+        function filterAidatTable() {
+            const blokFilter = document.getElementById('filterAidatBlok').value;
+            const ayFilter = document.getElementById('filterAidatAy').value;
+            const daireFilter = document.getElementById('filterAidatDaire').value;
+
+            let filtered = aidatlar;
+            
+            if (blokFilter) {
+                filtered = filtered.filter(a => a.blok === blokFilter);
+            }
+            if (ayFilter) {
+                filtered = filtered.filter(a => a.ay === ayFilter);
+            }
+            if (daireFilter) {
+                filtered = filtered.filter(a => a.daire == daireFilter);
+            }
+
+            updateAidatTable(filtered);
+        }
+
+        function filterGiderTable() {
+            const turFilter = document.getElementById('filterGiderTur').value;
+            const baslangic = document.getElementById('filterGiderBaslangic').value;
+            const bitis = document.getElementById('filterGiderBitis').value;
+
+            let filtered = giderler;
+            
+            if (turFilter) {
+                filtered = filtered.filter(g => g.tur === turFilter);
+            }
+            if (baslangic) {
+                filtered = filtered.filter(g => g.tarih >= baslangic);
+            }
+            if (bitis) {
+                filtered = filtered.filter(g => g.tarih <= bitis);
+            }
+
+            updateGiderTable(filtered);
+        }
+
+        function filterDaireTable() {
+            const blokFilter = document.getElementById('filterDaireBlok').value;
+            const daireFilter = document.getElementById('filterDaireNo').value;
+
+            let filtered = daireler;
+            
+            if (blokFilter) {
+                filtered = filtered.filter(d => d.blok === blokFilter);
+            }
+            if (daireFilter) {
+                filtered = filtered.filter(d => d.no == daireFilter);
+            }
+
+            updateDaireTable(filtered);
+        }
+
+        // Tabloları güncelle
+        function updateAidatTable(data = aidatlar) {
+            const tbody = document.getElementById('aidatTableBody');
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-data">Henüz aidat kaydı yok</td></tr>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(aidat => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${new Date(aidat.tarih).toLocaleDateString('tr-TR')}</td>
+                    <td>${aidat.blok} Blok</td>
+                    <td>${aidat.daire}</td>
+                    <td>${aidat.ay}</td>
+                    <td>${aidat.tutar.toFixed(2)} ₺</td>
+                    <td><button class="delete-btn" onclick="deleteAidat(${aidat.id})">Sil</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateGiderTable(data = giderler) {
+            const tbody = document.getElementById('giderTableBody');
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="no-data">Henüz gider kaydı yok</td></tr>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(gider => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${new Date(gider.tarih).toLocaleDateString('tr-TR')}</td>
+                    <td>${gider.tur}</td>
+                    <td>${gider.aciklama || '-'}</td>
+                    <td>${gider.tutar.toFixed(2)} ₺</td>
+                    <td><button class="delete-btn" onclick="deleteGider(${gider.id})">Sil</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateDaireTable(data = daireler) {
+            const tbody = document.getElementById('daireTableBody');
+            tbody.innerHTML = '';
+            
+            data.forEach(daire => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${daire.blok} Blok</td>
+                    <td>${daire.no}</td>
+                    <td>${daire.evSahibi || '-'}</td>
+                    <td>${daire.telefon || '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateAllTables() {
+            filterAidatTable();
+            filterGiderTable();
+            filterDaireTable();
+        }
+
+        // Silme işlemleri
+        function deleteAidat(id) {
+            if (confirm('Bu ödemeyi silmek istediğinizden emin misiniz?')) {
+                aidatlar = aidatlar.filter(a => a.id !== id);
+                localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
+                filterAidatTable();
+                updateRaporlar();
+            }
+        }
+
+        function deleteGider(id) {
+            if (confirm('Bu gideri silmek istediğinizden emin misiniz?')) {
+                giderler = giderler.filter(g => g.id !== id);
+                localStorage.setItem('giderler', JSON.stringify(giderler));
+                filterGiderTable();
+                updateRaporlar();
+            }
+        }
+
+        // Raporları güncelle
+        function updateRaporlar() {
+            const ayFilter = document.getElementById('filterRaporAy')?.value;
+            const blokFilter = document.getElementById('filterRaporBlok')?.value;
+
+            let filteredAidatlar = aidatlar;
+            let filteredGiderler = giderler;
+
+            // Ay filtreleme
+            if (ayFilter) {
+                filteredAidatlar = filteredAidatlar.filter(a => a.ay === ayFilter);
+                // Giderler için ay filtrelemesi (tarih üzerinden)
+                const aylar = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 
+                               'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+                const ayIndex = aylar.indexOf(ayFilter);
+                if (ayIndex !== -1) {
+                    filteredGiderler = filteredGiderler.filter(g => {
+                        const tarih = new Date(g.tarih);
+                        return tarih.getMonth() === ayIndex;
+                    });
+                }
+            }
+
+            // Blok filtreleme
+            if (blokFilter) {
+                filteredAidatlar = filteredAidatlar.filter(a => a.blok === blokFilter);
+            }
+
+            const toplamAidat = filteredAidatlar.reduce((sum, a) => sum + a.tutar, 0);
+            const toplamGider = filteredGiderler.reduce((sum, g) => sum + g.tutar, 0);
+            const kasa = toplamAidat - toplamGider;
+
+            document.getElementById('toplamAidat').textContent = toplamAidat.toFixed(2) + ' ₺';
+            document.getElementById('toplamGider').textContent = toplamGider.toFixed(2) + ' ₺';
+            document.getElementById('kasaDurum').textContent = kasa.toFixed(2) + ' ₺';
+
+            // Gider dağılımı
+            const giderDagilim = {};
+            filteredGiderler.forEach(g => {
+                giderDagilim[g.tur] = (giderDagilim[g.tur] || 0) + g.tutar;
+            });
+
+            const tbody = document.getElementById('giderDagılımBody');
+            tbody.innerHTML = '';
+            
+            if (Object.keys(giderDagilim).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" class="no-data">Gider kaydı yok</td></tr>';
+            } else {
+                Object.entries(giderDagilim)
+                    .sort((a, b) => b[1] - a[1])
+                    .forEach(([tur, tutar]) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${tur}</td>
+                            <td>${tutar.toFixed(2)} ₺</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+            }
+
+            // Blok bazında aidat özeti
+            const blokAidat = {};
+            filteredAidatlar.forEach(a => {
+                if (!blokAidat[a.blok]) {
+                    blokAidat[a.blok] = { toplam: 0, adet: 0 };
+                }
+                blokAidat[a.blok].toplam += a.tutar;
+                blokAidat[a.blok].adet++;
+            });
+
+            const blokBody = document.getElementById('blokAidatBody');
+            blokBody.innerHTML = '';
+            
+            ['A', 'B', 'C'].forEach(blok => {
+                const data = blokAidat[blok] || { toplam: 0, adet: 0 };
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${blok} Blok</td>
+                    <td>${data.toplam.toFixed(2)} ₺</td>
+                    <td>${data.adet}</td>
+                `;
+                blokBody.appendChild(tr);
+            });
+        }
+
+        // Excel export fonksiyonları
+        function exportAidatToExcel() {
+            const blokFilter = document.getElementById('filterAidatBlok').value;
+            const ayFilter = document.getElementById('filterAidatAy').value;
+            const daireFilter = document.getElementById('filterAidatDaire').value;
+
+            let filtered = aidatlar;
+            
+            if (blokFilter) filtered = filtered.filter(a => a.blok === blokFilter);
+            if (ayFilter) filtered = filtered.filter(a => a.ay === ayFilter);
+            if (daireFilter) filtered = filtered.filter(a => a.daire == daireFilter);
+
+            let csv = 'Tarih,Blok,Daire,Ay,Tutar\n';
+            filtered.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(aidat => {
+                csv += `${new Date(aidat.tarih).toLocaleDateString('tr-TR')},${aidat.blok} Blok,${aidat.daire},${aidat.ay},${aidat.tutar.toFixed(2)}\n`;
+            });
+
+            downloadCSV(csv, 'aidatlar.csv');
+        }
+
+        function exportGiderToExcel() {
+            const turFilter = document.getElementById('filterGiderTur').value;
+            const baslangic = document.getElementById('filterGiderBaslangic').value;
+            const bitis = document.getElementById('filterGiderBitis').value;
+
+            let filtered = giderler;
+            
+            if (turFilter) filtered = filtered.filter(g => g.tur === turFilter);
+            if (baslangic) filtered = filtered.filter(g => g.tarih >= baslangic);
+            if (bitis) filtered = filtered.filter(g => g.tarih <= bitis);
+
+            let csv = 'Tarih,Gider Türü,Açıklama,Tutar\n';
+            filtered.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(gider => {
+                const aciklama = (gider.aciklama || '').replace(/,/g, ' ').replace(/\n/g, ' ');
+                csv += `${new Date(gider.tarih).toLocaleDateString('tr-TR')},${gider.tur},"${aciklama}",${gider.tutar.toFixed(2)}\n`;
+            });
+
+            downloadCSV(csv, 'giderler.csv');
+        }
+
+        function exportDaireToExcel() {
+            const blokFilter = document.getElementById('filterDaireBlok').value;
+            const daireFilter = document.getElementById('filterDaireNo').value;
+
+            let filtered = daireler;
+            
+            if (blokFilter) filtered = filtered.filter(d => d.blok === blokFilter);
+            if (daireFilter) filtered = filtered.filter(d => d.no == daireFilter);
+
+            let csv = 'Blok,Daire No,Ev Sahibi,Telefon\n';
+            filtered.forEach(daire => {
+                csv += `${daire.blok} Blok,${daire.no},${daire.evSahibi || '-'},${daire.telefon || '-'}\n`;
+            });
+
+            downloadCSV(csv, 'daireler.csv');
+        }
+
+        function exportRaporToExcel() {
+            const ayFilter = document.getElementById('filterRaporAy').value;
+            const blokFilter = document.getElementById('filterRaporBlok').value;
+
+            let csv = 'ÖZAYDENİZ SİTESİ - GENEL RAPOR\n\n';
+            
+            if (ayFilter) csv += `Ay: ${ayFilter}\n`;
+            if (blokFilter) csv += `Blok: ${blokFilter} Blok\n`;
+            csv += '\n';
+
+            // Özet bilgiler
+            csv += 'ÖZET\n';
+            csv += `Toplam Aidat Geliri,${document.getElementById('toplamAidat').textContent}\n`;
+            csv += `Toplam Gider,${document.getElementById('toplamGider').textContent}\n`;
+            csv += `Kasa Durumu,${document.getElementById('kasaDurum').textContent}\n\n`;
+
+            // Gider dağılımı
+            csv += 'GİDER DAĞILIMI\n';
+            csv += 'Gider Türü,Tutar\n';
+            const giderRows = document.getElementById('giderDagılımBody').querySelectorAll('tr');
+            giderRows.forEach(row => {
+                const cols = row.querySelectorAll('td');
+                if (cols.length === 2) {
+                    csv += `${cols[0].textContent},${cols[1].textContent}\n`;
+                }
+            });
+
+            csv += '\nBLOK BAZINDA AİDAT ÖZETİ\n';
+            csv += 'Blok,Toplam Aidat,Ödeme Sayısı\n';
+            const blokRows = document.getElementById('blokAidatBody').querySelectorAll('tr');
+            blokRows.forEach(row => {
+                const cols = row.querySelectorAll('td');
+                if (cols.length === 3) {
+                    csv += `${cols[0].textContent},${cols[1].textContent},${cols[2].textContent}\n`;
+                }
+            });
+
+            downloadCSV(csv, 'ozaydeniz-rapor.csv');
+        }
+
+        function downloadCSV(content, filename) {
+            const BOM = '\uFEFF'; // UTF-8 BOM for Excel
+            const blob = new Blob([BOM + content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Bugünün tarihini varsayılan yap
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('aidatTarih')?.setAttribute('value', today);
+        document.getElementById('giderTarih')?.setAttribute('value', today);
+    </script>
+</body>
+</html>
