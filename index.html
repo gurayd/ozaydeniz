@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +25,7 @@
             background: white;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         /* Login Ekranı */
@@ -34,7 +35,7 @@
             background: white;
             border-radius: 15px;
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         .login-header {
@@ -96,6 +97,22 @@
             background: #5568d3;
         }
 
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
         .login-error {
             display: none;
             padding: 12px;
@@ -110,6 +127,34 @@
 
         .login-error.show {
             display: block;
+        }
+
+        .login-success {
+            display: none;
+            padding: 12px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .login-success.show {
+            display: block;
+        }
+
+        .back-to-login {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-to-login a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
         }
 
         .header {
@@ -130,6 +175,36 @@
         .header-left p {
             font-size: 14px;
             color: #666;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .backup-btn,
+        .import-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .backup-btn:hover {
+            background: #218838;
+        }
+
+        .import-btn {
+            background: #17a2b8;
+        }
+
+        .import-btn:hover {
+            background: #138496;
         }
 
         .logout-btn {
@@ -163,22 +238,154 @@
             cursor: pointer;
             transition: all 0.3s;
             color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .menu-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
         }
 
         .menu-btn:active {
             transform: translateY(0);
         }
 
-        .btn-aidat { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-        .btn-gider { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
-        .btn-daire { background: linear-gradient(135deg, #4776e6 0%, #8e54e9 100%); }
-        .btn-rapor { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .btn-aidat {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .btn-gider {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }
+
+        .btn-daire {
+            background: linear-gradient(135deg, #4776e6 0%, #8e54e9 100%);
+        }
+
+        .btn-rapor {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-makbuz {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            background: #f8f9fa;
+            border-color: #5568d3;
+        }
+
+        .upload-area.dragover {
+            background: #e7f3ff;
+            border-color: #667eea;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .makbuz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .makbuz-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .makbuz-item img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .makbuz-item .pdf-icon {
+            font-size: 80px;
+            color: #dc3545;
+            cursor: pointer;
+        }
+
+        .makbuz-item .info {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .makbuz-delete {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 10px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: white;
+            border: none;
+            font-size: 30px;
+            color: #333;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
 
         .section {
             display: none;
@@ -190,8 +397,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .back-btn {
@@ -391,9 +605,17 @@
             font-weight: bold;
         }
 
-        .card-green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-        .card-red { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
-        .card-blue { background: linear-gradient(135deg, #4776e6 0%, #8e54e9 100%); }
+        .card-green {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .card-red {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }
+
+        .card-blue {
+            background: linear-gradient(135deg, #4776e6 0%, #8e54e9 100%);
+        }
 
         .success-message {
             display: none;
@@ -421,6 +643,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Login Ekranı -->
     <div id="loginScreen" class="login-container">
@@ -428,10 +651,12 @@
             <h1>🏢 Özaydeniz Sitesi</h1>
             <p>Site Yönetim Paneli</p>
         </div>
-        
+
         <div class="login-error" id="loginError">Kullanıcı adı veya şifre hatalı!</div>
-        
-        <form class="login-form" onsubmit="handleLogin(event)">
+        <div class="login-success" id="loginSuccess"></div>
+
+        <!-- Normal Giriş -->
+        <form class="login-form" id="normalLoginForm" onsubmit="handleLogin(event)">
             <div class="form-group">
                 <label>Kullanıcı Adı</label>
                 <input type="text" id="loginUsername" required autocomplete="username">
@@ -441,7 +666,45 @@
                 <input type="password" id="loginPassword" required autocomplete="current-password">
             </div>
             <button type="submit" class="login-btn">Giriş Yap</button>
+            <div class="forgot-password">
+                <a onclick="showForgotPassword()">Şifremi Unuttum</a>
+            </div>
         </form>
+
+        <!-- Şifremi Unuttum -->
+        <div id="forgotPasswordForm" style="display: none;">
+            <div class="form-group">
+                <label>E-posta Adresiniz</label>
+                <select id="emailSelect" class="form-group"
+                    style="padding: 12px; font-size: 15px; border: 2px solid #ddd; border-radius: 8px; width: 100%;">
+                    <option value="">E-posta Seçin</option>
+                    <option value="guraydinsel@gmail.com">guraydinsel@gmail.com</option>
+                    <option value="hayrettinselimdinsel@gmail.com">hayrettinselimdinsel@gmail.com</option>
+                    <option value="mehmeteraydinsel@gmail.com">mehmeteraydinsel@gmail.com</option>
+                </select>
+            </div>
+            <button class="login-btn" onclick="sendResetCode()">Kod Gönder</button>
+
+            <div id="codeSection" style="display: none; margin-top: 20px;">
+                <div class="form-group">
+                    <label>Gelen Kodu Girin</label>
+                    <input type="text" id="resetCode" placeholder="6 haneli kod">
+                </div>
+                <div class="form-group">
+                    <label>Yeni Şifre</label>
+                    <input type="password" id="newPassword" placeholder="Yeni şifreniz">
+                </div>
+                <div class="form-group">
+                    <label>Yeni Şifre (Tekrar)</label>
+                    <input type="password" id="newPasswordConfirm" placeholder="Yeni şifrenizi tekrar girin">
+                </div>
+                <button class="login-btn" onclick="resetPassword()">Şifreyi Değiştir</button>
+            </div>
+
+            <div class="back-to-login">
+                <a onclick="showNormalLogin()">← Giriş Ekranına Dön</a>
+            </div>
+        </div>
     </div>
 
     <!-- Ana Panel -->
@@ -451,7 +714,12 @@
                 <h1>🏢 Özaydeniz Sitesi</h1>
                 <p>Site Yönetim Paneli</p>
             </div>
-            <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>
+            <div class="header-right">
+                <button class="backup-btn" onclick="backupData()">💾 Yedekle</button>
+                <button class="import-btn" onclick="document.getElementById('importFile').click()">📥 İçe Aktar</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+                <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>
+            </div>
         </div>
 
         <!-- Ana Menü -->
@@ -466,6 +734,9 @@
                 <button class="menu-btn btn-daire" onclick="showSection('daire')">
                     🏠 Daire Bilgileri
                 </button>
+                <button class="menu-btn btn-makbuz" onclick="showSection('makbuz')">
+                    📄 Makbuz Arşivi
+                </button>
                 <button class="menu-btn btn-rapor" onclick="showSection('rapor')">
                     📊 Raporlar
                 </button>
@@ -475,12 +746,12 @@
         <!-- Aidat İşlemleri -->
         <div id="aidat" class="section">
             <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
-            
+
             <div class="section-header">
                 <h2>Aidat Ödemesi Kaydet</h2>
                 <button class="export-btn" onclick="exportAidatToExcel()">📊 Excel'e Aktar</button>
             </div>
-            
+
             <div class="success-message" id="aidatSuccess">Aidat ödemesi kaydedildi!</div>
 
             <form onsubmit="saveAidat(event)">
@@ -532,12 +803,23 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label>Makbuz Yükle (İsteğe Bağlı):</label>
+                    <input type="file" id="aidatMakbuz" accept="image/*,.pdf" style="padding: 10px;">
+                </div>
+
                 <button type="submit" class="submit-btn">Ödemeyi Kaydet</button>
             </form>
 
             <div class="filters">
                 <h3>🔍 Filtreleme</h3>
                 <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Yıl</label>
+                        <select id="filterAidatYil" onchange="filterAidatTable()">
+                            <option value="">Tümü</option>
+                        </select>
+                    </div>
                     <div class="filter-group">
                         <label>Blok</label>
                         <select id="filterAidatBlok" onchange="filterAidatTable()">
@@ -567,7 +849,8 @@
                     </div>
                     <div class="filter-group">
                         <label>Daire</label>
-                        <input type="number" id="filterAidatDaire" placeholder="Daire No" min="1" max="12" onchange="filterAidatTable()">
+                        <input type="number" id="filterAidatDaire" placeholder="Daire No" min="1" max="12"
+                            onchange="filterAidatTable()">
                     </div>
                 </div>
             </div>
@@ -594,12 +877,12 @@
         <!-- Gider Ekle -->
         <div id="gider" class="section">
             <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
-            
+
             <div class="section-header">
                 <h2>Yeni Gider Ekle</h2>
                 <button class="export-btn" onclick="exportGiderToExcel()">📊 Excel'e Aktar</button>
             </div>
-            
+
             <div class="success-message" id="giderSuccess">Gider kaydedildi!</div>
 
             <form onsubmit="saveGider(event)">
@@ -635,12 +918,23 @@
                     <textarea id="giderAciklama" rows="2" placeholder="Gider detaylarını yazın..."></textarea>
                 </div>
 
+                <div class="form-group">
+                    <label>Makbuz Yükle (İsteğe Bağlı):</label>
+                    <input type="file" id="giderMakbuz" accept="image/*,.pdf" style="padding: 10px;">
+                </div>
+
                 <button type="submit" class="submit-btn">Gideri Kaydet</button>
             </form>
 
             <div class="filters">
                 <h3>🔍 Filtreleme</h3>
                 <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Yıl</label>
+                        <select id="filterGiderYil" onchange="filterGiderTable()">
+                            <option value="">Tümü</option>
+                        </select>
+                    </div>
                     <div class="filter-group">
                         <label>Gider Türü</label>
                         <select id="filterGiderTur" onchange="filterGiderTable()">
@@ -687,12 +981,12 @@
         <!-- Daire Bilgileri -->
         <div id="daire" class="section">
             <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
-            
+
             <div class="section-header">
                 <h2>Daire Bilgileri</h2>
                 <button class="export-btn" onclick="exportDaireToExcel()">📊 Excel'e Aktar</button>
             </div>
-            
+
             <div class="success-message" id="daireSuccess">Daire bilgisi güncellendi!</div>
 
             <form onsubmit="saveDaire(event)">
@@ -742,7 +1036,8 @@
                     </div>
                     <div class="filter-group">
                         <label>Daire No</label>
-                        <input type="number" id="filterDaireNo" placeholder="Daire No" min="1" max="12" onchange="filterDaireTable()">
+                        <input type="number" id="filterDaireNo" placeholder="Daire No" min="1" max="12"
+                            onchange="filterDaireTable()">
                     </div>
                 </div>
             </div>
@@ -767,7 +1062,7 @@
         <!-- Raporlar -->
         <div id="rapor" class="section">
             <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
-            
+
             <div class="section-header">
                 <h2>Genel Durum</h2>
                 <button class="export-btn" onclick="exportRaporToExcel()">📊 Tam Rapor Excel'e Aktar</button>
@@ -792,9 +1087,15 @@
                 <h3>🔍 Rapor Filtreleme</h3>
                 <div class="filter-row">
                     <div class="filter-group">
+                        <label>Yıl</label>
+                        <select id="filterRaporYil" onchange="updateRaporlar()">
+                            <option value="">Tüm Zamanlar</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
                         <label>Ay</label>
                         <select id="filterRaporAy" onchange="updateRaporlar()">
-                            <option value="">Tüm Zamanlar</option>
+                            <option value="">Tümü</option>
                             <option value="Ocak">Ocak</option>
                             <option value="Şubat">Şubat</option>
                             <option value="Mart">Mart</option>
@@ -850,12 +1151,252 @@
                 </table>
             </div>
         </div>
+
+        <!-- Makbuz Arşivi -->
+        <div id="makbuz" class="section">
+            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
+
+            <div class="section-header">
+                <h2>Makbuz Arşivi</h2>
+                <button class="export-btn" onclick="downloadAllReceipts()">📦 Tümünü İndir</button>
+            </div>
+
+            <h3 style="font-size: 18px; margin-bottom: 15px;">Yeni Makbuz Ekle</h3>
+
+            <form onsubmit="saveMakbuzWithDetails(event)" style="margin-bottom: 30px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label>Makbuz Türü:</label>
+                        <select id="makbuzTur" required onchange="toggleMakbuzAciklama()">
+                            <option value="">Tür Seçin</option>
+                            <option value="Aidat">Aidat</option>
+                            <option value="Gider">Gider</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="makbuzGiderTurDiv" style="display: none;">
+                        <label>Gider Türü:</label>
+                        <select id="makbuzGiderTur">
+                            <option value="">Gider Türü Seçin</option>
+                            <option value="Asansör Giderleri">Asansör Giderleri</option>
+                            <option value="Bina Temizlik">Bina Temizlik</option>
+                            <option value="Bahçe Bakımı">Bahçe Bakımı</option>
+                            <option value="Su Arıtma Tuz">Su Arıtma Tuz Gideri</option>
+                            <option value="Hidrofor Bakım">Hidrofor Sistemi Bakım</option>
+                            <option value="Elektrik">Elektrik Gideri</option>
+                            <option value="Su">Su Gideri</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="makbuzBlokDiv" style="display: none;">
+                        <label>Blok:</label>
+                        <select id="makbuzBlok">
+                            <option value="">Blok Seçin</option>
+                            <option value="A">A Blok</option>
+                            <option value="B">B Blok</option>
+                            <option value="C">C Blok</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="makbuzDaireDiv" style="display: none;">
+                        <label>Daire:</label>
+                        <select id="makbuzDaire">
+                            <option value="">Önce Blok Seçin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tutar (₺):</label>
+                        <input type="number" id="makbuzTutar" step="0.01" placeholder="Örnek: 500">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tarih:</label>
+                        <input type="date" id="makbuzTarih" required>
+                    </div>
+                </div>
+
+                <div class="form-group" id="makbuzAciklamaDiv" style="display: none;">
+                    <label>Açıklama:</label>
+                    <textarea id="makbuzAciklama" rows="2" placeholder="Makbuz hakkında açıklama..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Makbuz Dosyası:</label>
+                    <input type="file" id="makbuzDosya" accept="image/*,.pdf" required style="padding: 10px;">
+                </div>
+
+                <button type="submit" class="submit-btn">Makbuz Ekle</button>
+            </form>
+
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('receiptFile').click()">
+                <div class="upload-icon">📤</div>
+                <p style="font-size: 16px; font-weight: 600; margin-bottom: 5px;">Hızlı Yükleme</p>
+                <p style="font-size: 14px; color: #666;">Dosyaları sürükleyip bırakın (detay sonra eklenebilir)</p>
+                <input type="file" id="receiptFile" accept="image/*,.pdf" multiple style="display: none;"
+                    onchange="uploadReceipts(event)">
+            </div>
+
+            <div class="filters">
+                <h3>🔍 Filtreleme</h3>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Yıl</label>
+                        <select id="filterMakbuzYil" onchange="filterMakbuzlar()">
+                            <option value="">Tümü</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Tür</label>
+                        <select id="filterMakbuzTur" onchange="filterMakbuzlar()">
+                            <option value="">Tümü</option>
+                            <option value="Aidat">Aidat</option>
+                            <option value="Gider">Gider</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Blok</label>
+                        <select id="filterMakbuzBlok" onchange="filterMakbuzlar()">
+                            <option value="">Tümü</option>
+                            <option value="A">A Blok</option>
+                            <option value="B">B Blok</option>
+                            <option value="C">C Blok</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Dosya Türü</label>
+                        <select id="filterMakbuzDosya" onchange="filterMakbuzlar()">
+                            <option value="">Tümü</option>
+                            <option value="image">Resim</option>
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="makbuz-grid" id="makbuzGrid">
+                <!-- Makbuzlar buraya eklenecek -->
+            </div>
+        </div>
     </div>
 
+    <!-- Makbuz Modal -->
+    <div id="makbuzModal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <img id="modalImage" src="" alt="Makbuz">
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
+        // Firebase Konfigürasyonu
+        const firebaseConfig = {
+            apiKey: "AIzaSyBUkYnw8wRcppqf0lKz33SyzXgcSmKZpaE",
+            authDomain: "ozaydeniz-d983c.firebaseapp.com",
+            projectId: "ozaydeniz-d983c",
+            storageBucket: "ozaydeniz-d983c.firebasestorage.app",
+            messagingSenderId: "200844766910",
+            appId: "1:200844766910:web:575facdd595f52dd3f78ef"
+        };
+
+        // Firebase Başlat
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Veri saklama - EN BAŞTA TANIMLANMALI
+        let aidatlar = JSON.parse(localStorage.getItem('aidatlar') || '[]');
+        let giderler = JSON.parse(localStorage.getItem('giderler') || '[]');
+        let daireler = JSON.parse(localStorage.getItem('daireler') || '[]');
+        let makbuzlar = JSON.parse(localStorage.getItem('makbuzlar') || '[]');
+
         // Kullanıcı bilgileri
         const validUsername = "HAYRETTİN SELİM DİNSEL";
-        const validPassword = "meteozandefne";
+        let validPassword = localStorage.getItem('userPassword') || "meteozandefne";
+        let resetCode = '';
+        const authorizedEmails = [
+            "guraydinsel@gmail.com",
+            "hayrettinselimdinsel@gmail.com",
+            "mehmeteraydinsel@gmail.com"
+        ];
+
+        // Şifremi unuttum fonksiyonları
+        function showForgotPassword() {
+            document.getElementById('normalLoginForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'block';
+        }
+
+        function showNormalLogin() {
+            document.getElementById('normalLoginForm').style.display = 'block';
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+            document.getElementById('codeSection').style.display = 'none';
+        }
+
+        function sendResetCode() {
+            const email = document.getElementById('emailSelect').value;
+            if (!email) {
+                alert('Lütfen e-posta adresinizi seçin!');
+                return;
+            }
+
+            // 6 haneli rastgele kod oluştur
+            resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+            // Gerçek bir uygulamada burada e-posta gönderilir
+            // Şimdilik sadece console'a yazdırıyoruz
+            console.log('Şifre sıfırlama kodu:', resetCode);
+            console.log('E-posta:', email);
+
+            document.getElementById('codeSection').style.display = 'block';
+            showLoginSuccess(`Kod ${email} adresine gönderildi. (Test: ${resetCode})`);
+        }
+
+        function resetPassword() {
+            const code = document.getElementById('resetCode').value;
+            const newPass = document.getElementById('newPassword').value;
+            const newPassConfirm = document.getElementById('newPasswordConfirm').value;
+
+            if (code !== resetCode) {
+                showLoginError('Kod hatalı!');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                showLoginError('Şifre en az 6 karakter olmalı!');
+                return;
+            }
+
+            if (newPass !== newPassConfirm) {
+                showLoginError('Şifreler eşleşmiyor!');
+                return;
+            }
+
+            validPassword = newPass;
+            localStorage.setItem('userPassword', newPass);
+
+            showLoginSuccess('Şifreniz başarıyla değiştirildi!');
+            setTimeout(() => {
+                showNormalLogin();
+            }, 2000);
+        }
+
+        function showLoginError(message) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 3000);
+        }
+
+        function showLoginSuccess(message) {
+            const successDiv = document.getElementById('loginSuccess');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+            setTimeout(() => successDiv.classList.remove('show'), 3000);
+        }
 
         // Login kontrolü
         function handleLogin(event) {
@@ -867,11 +1408,20 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainPanel').style.display = 'block';
                 localStorage.setItem('isLoggedIn', 'true');
+
+                // Başarılı girişte Firebase senkronizasyonunu ve tablo güncellemelerini başlat
+                initializeDaireler();
+                updateAllTables();
+                updateRaporlar();
+                populateYearFilters();
+                filterMakbuzlar();
+                setupDragAndDrop();
+
+                autoSyncToCloud().then(() => {
+                    startFirebaseListeners();
+                });
             } else {
-                document.getElementById('loginError').classList.add('show');
-                setTimeout(() => {
-                    document.getElementById('loginError').classList.remove('show');
-                }, 3000);
+                showLoginError('Kullanıcı adı veya şifre hatalı!');
             }
         }
 
@@ -886,23 +1436,167 @@
             }
         }
 
-        // Sayfa yüklendiğinde login kontrolü
-        window.onload = function() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn === 'true') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainPanel').style.display = 'block';
-            }
-            
-            initializeDaireler();
-            updateAllTables();
-            updateRaporlar();
-        };
+        // Yedekleme ve İçe Aktarma
+        function backupData() {
+            const allData = {
+                aidatlar: aidatlar,
+                giderler: giderler,
+                daireler: daireler,
+                makbuzlar: makbuzlar,
+                password: validPassword,
+                backupDate: new Date().toISOString()
+            };
 
-        // Veri saklama
-        let aidatlar = JSON.parse(localStorage.getItem('aidatlar') || '[]');
-        let giderler = JSON.parse(localStorage.getItem('giderler') || '[]');
-        let daireler = JSON.parse(localStorage.getItem('daireler') || '[]');
+            const dataStr = JSON.stringify(allData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const fileName = `ozaydeniz-yedek-${new Date().toISOString().split('T')[0]}.json`;
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            alert('Yedekleme başarılı! Dosyayı güvenli bir yerde saklayın.');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    if (confirm('Tüm mevcut veriler silinecek ve yedek dosyası yüklenecek. Emin misiniz?')) {
+                        aidatlar = data.aidatlar || [];
+                        giderler = data.giderler || [];
+                        daireler = data.daireler || [];
+                        makbuzlar = data.makbuzlar || [];
+
+                        if (data.password) {
+                            validPassword = data.password;
+                            localStorage.setItem('userPassword', data.password);
+                        }
+
+                        localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
+                        localStorage.setItem('giderler', JSON.stringify(giderler));
+                        localStorage.setItem('daireler', JSON.stringify(daireler));
+                        localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
+
+                        updateAllTables();
+                        updateRaporlar();
+                        populateYearFilters();
+                        filterMakbuzlar();
+
+                        alert('Veriler başarıyla yüklendi!');
+                    }
+                } catch (error) {
+                    alert('Hata: Dosya okunamadı. Lütfen geçerli bir yedek dosyası seçin.');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // Firebase'e veri yükle (Otomatik Migration)
+        async function autoSyncToCloud() {
+            // Eğer daha önce senkronize edilmediyse veya local'de veri varsa buluta aktar
+            const isMigrated = localStorage.getItem('isFirebaseMigrated');
+            if (isMigrated === 'true') return;
+
+            console.log("Bulut senkronizasyonu başlatılıyor...");
+
+            try {
+                const batch = db.batch();
+                let hasData = false;
+
+                if (aidatlar.length > 0) {
+                    aidatlar.forEach(a => batch.set(db.collection("aidatlar").doc(a.id.toString()), a));
+                    hasData = true;
+                }
+                if (giderler.length > 0) {
+                    giderler.forEach(g => batch.set(db.collection("giderler").doc(g.id.toString()), g));
+                    hasData = true;
+                }
+                if (daireler.length > 0) {
+                    daireler.forEach(d => batch.set(db.collection("daireler").doc(`${d.blok}_${d.no}`), d));
+                    hasData = true;
+                }
+
+                if (makbuzlar.length > 0) {
+                    makbuzlar.forEach(m => {
+                        const size = JSON.stringify(m).length;
+                        if (size < 1000000) {
+                            batch.set(db.collection("makbuzlar").doc(m.id.toString()), m);
+                            hasData = true;
+                        }
+                    });
+                }
+
+                if (hasData) {
+                    await batch.commit();
+                    console.log("Yerel veriler buluta aktarıldı.");
+                }
+
+                localStorage.setItem('isFirebaseMigrated', 'true');
+            } catch (error) {
+                console.error("Otomatik senkronizasyon hatası:", error);
+            }
+        }
+
+        // Real-time Firebase Dinleyicileri
+        function startFirebaseListeners() {
+            db.collection("aidatlar").onSnapshot((snapshot) => {
+                if (!snapshot.empty) {
+                    aidatlar = snapshot.docs.map(doc => doc.data());
+                    localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
+                    updateAllTables();
+                    updateRaporlar();
+                    populateYearFilters();
+                }
+            });
+
+            db.collection("giderler").onSnapshot((snapshot) => {
+                if (!snapshot.empty) {
+                    giderler = snapshot.docs.map(doc => doc.data());
+                    localStorage.setItem('giderler', JSON.stringify(giderler));
+                    updateAllTables();
+                    updateRaporlar();
+                    populateYearFilters();
+                }
+            });
+
+            db.collection("daireler").onSnapshot((snapshot) => {
+                if (!snapshot.empty) {
+                    daireler = snapshot.docs.map(doc => doc.data());
+                    localStorage.setItem('daireler', JSON.stringify(daireler));
+                    updateDaireTable();
+                }
+            });
+
+            db.collection("makbuzlar").onSnapshot((snapshot) => {
+                if (!snapshot.empty) {
+                    makbuzlar = snapshot.docs.map(doc => doc.data());
+                    localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
+                    filterMakbuzlar();
+                    populateYearFilters();
+                }
+            });
+        }
+
+        // Sayfa yüklendiğinde login kontrolü
+        window.onload = function () {
+            // Otomatik girişi engellemek için mevcut oturumu her açılışta temizle
+            localStorage.removeItem('isLoggedIn');
+
+            // Login ekranında daire listesi gibi temel veriler gerekirse diye:
+            initializeDaireler();
+        };
 
         // Daireleri başlat
         function initializeDaireler() {
@@ -918,28 +1612,82 @@
                         });
                     }
                 });
+
+                // A Blok - Dükkan 1 ve 2
+                daireler.push({
+                    blok: 'A',
+                    no: 'Dükkan 1',
+                    evSahibi: '',
+                    telefon: ''
+                });
+                daireler.push({
+                    blok: 'A',
+                    no: 'Dükkan 2',
+                    evSahibi: '',
+                    telefon: ''
+                });
+
+                // B Blok - Kapıcı Dairesi
+                daireler.push({
+                    blok: 'B',
+                    no: 'Kapıcı Dairesi',
+                    evSahibi: '',
+                    telefon: ''
+                });
+
+                // C Blok - Dükkan 3
+                daireler.push({
+                    blok: 'C',
+                    no: 'Dükkan 3',
+                    evSahibi: '',
+                    telefon: ''
+                });
+
                 localStorage.setItem('daireler', JSON.stringify(daireler));
             }
         }
 
         // Blok seçildiğinde daire listesini güncelle
-        document.getElementById('aidatBlok')?.addEventListener('change', function() {
+        document.getElementById('aidatBlok')?.addEventListener('change', function () {
             updateDaireSelect('aidatDaire', this.value);
         });
 
-        document.getElementById('daireBlok')?.addEventListener('change', function() {
+        document.getElementById('daireBlok')?.addEventListener('change', function () {
             updateDaireSelect('daireNo', this.value);
         });
 
         function updateDaireSelect(selectId, blok) {
             const select = document.getElementById(selectId);
+            if (!select) return;
+
             select.innerHTML = '<option value="">Daire Seçin</option>';
-            
+
             if (blok) {
+                // Normal daireler
                 for (let i = 1; i <= 12; i++) {
                     const option = document.createElement('option');
                     option.value = i;
                     option.textContent = i;
+                    select.appendChild(option);
+                }
+
+                // Özel daireler
+                if (blok === 'A') {
+                    ['Dükkan 1', 'Dükkan 2'].forEach(d => {
+                        const option = document.createElement('option');
+                        option.value = d;
+                        option.textContent = d;
+                        select.appendChild(option);
+                    });
+                } else if (blok === 'B') {
+                    const option = document.createElement('option');
+                    option.value = 'Kapıcı Dairesi';
+                    option.textContent = 'Kapıcı Dairesi';
+                    select.appendChild(option);
+                } else if (blok === 'C') {
+                    const option = document.createElement('option');
+                    option.value = 'Dükkan 3';
+                    option.textContent = 'Dükkan 3';
                     select.appendChild(option);
                 }
             }
@@ -949,7 +1697,7 @@
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-            
+
             if (sectionId === 'rapor') {
                 updateRaporlar();
             }
@@ -958,7 +1706,7 @@
         // Aidat kaydet
         function saveAidat(event) {
             event.preventDefault();
-            
+
             const aidat = {
                 id: Date.now(),
                 tarih: document.getElementById('aidatTarih').value,
@@ -970,16 +1718,17 @@
 
             aidatlar.push(aidat);
             localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
-            
+
             showSuccessMessage('aidatSuccess');
             event.target.reset();
             filterAidatTable();
+            populateYearFilters();
         }
 
         // Gider kaydet
         function saveGider(event) {
             event.preventDefault();
-            
+
             const gider = {
                 id: Date.now(),
                 tarih: document.getElementById('giderTarih').value,
@@ -990,16 +1739,17 @@
 
             giderler.push(gider);
             localStorage.setItem('giderler', JSON.stringify(giderler));
-            
+
             showSuccessMessage('giderSuccess');
             event.target.reset();
             filterGiderTable();
+            populateYearFilters();
         }
 
         // Daire kaydet
         function saveDaire(event) {
             event.preventDefault();
-            
+
             const blok = document.getElementById('daireBlok').value;
             const no = parseInt(document.getElementById('daireNo').value);
             const evSahibi = document.getElementById('daireEvSahibi').value;
@@ -1010,7 +1760,7 @@
                 daireler[index].evSahibi = evSahibi;
                 daireler[index].telefon = telefon;
                 localStorage.setItem('daireler', JSON.stringify(daireler));
-                
+
                 showSuccessMessage('daireSuccess');
                 event.target.reset();
                 filterDaireTable();
@@ -1024,14 +1774,541 @@
             setTimeout(() => msg.classList.remove('show'), 3000);
         }
 
-        // Filtreleme fonksiyonları
+        // Yıl filtrelerini doldur
+        function populateYearFilters() {
+            const years = new Set();
+
+            aidatlar.forEach(a => {
+                const year = new Date(a.tarih).getFullYear();
+                years.add(year);
+            });
+
+            giderler.forEach(g => {
+                const year = new Date(g.tarih).getFullYear();
+                years.add(year);
+            });
+
+            makbuzlar.forEach(m => {
+                const year = new Date(m.tarih).getFullYear();
+                years.add(year);
+            });
+
+            const sortedYears = Array.from(years).sort((a, b) => b - a);
+
+            // Aidat yıl filtresi
+            const aidatYilSelect = document.getElementById('filterAidatYil');
+            if (aidatYilSelect) {
+                const currentValue = aidatYilSelect.value;
+                aidatYilSelect.innerHTML = '<option value="">Tümü</option>';
+                sortedYears.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    aidatYilSelect.appendChild(option);
+                });
+                aidatYilSelect.value = currentValue;
+            }
+
+            // Gider yıl filtresi
+            const giderYilSelect = document.getElementById('filterGiderYil');
+            if (giderYilSelect) {
+                const currentValue = giderYilSelect.value;
+                giderYilSelect.innerHTML = '<option value="">Tümü</option>';
+                sortedYears.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    giderYilSelect.appendChild(option);
+                });
+                giderYilSelect.value = currentValue;
+            }
+
+            // Rapor yıl filtresi
+            const raporYilSelect = document.getElementById('filterRaporYil');
+            if (raporYilSelect) {
+                const currentValue = raporYilSelect.value;
+                raporYilSelect.innerHTML = '<option value="">Tüm Zamanlar</option>';
+                sortedYears.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    raporYilSelect.appendChild(option);
+                });
+                raporYilSelect.value = currentValue;
+            }
+
+            // Makbuz yıl filtresi
+            const makbuzYilSelect = document.getElementById('filterMakbuzYil');
+            if (makbuzYilSelect) {
+                const currentValue = makbuzYilSelect.value;
+                makbuzYilSelect.innerHTML = '<option value="">Tümü</option>';
+                sortedYears.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    makbuzYilSelect.appendChild(option);
+                });
+                makbuzYilSelect.value = currentValue;
+            }
+        }
+
+        // Makbuz fonksiyonları
+        function setupDragAndDrop() {
+            const uploadArea = document.getElementById('uploadArea');
+            if (!uploadArea) return;
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleReceiptFiles(files);
+            });
+        }
+
+        function uploadReceipts(event) {
+            const files = event.target.files;
+            handleReceiptFiles(files);
+            event.target.value = '';
+        }
+
+        function handleReceiptFiles(files) {
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/') || file.type === 'application/pdf') {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const tur = prompt('Makbuz türü?\n1: Aidat\n2: Gider\n3: Diğer', '1');
+                        const turMap = { '1': 'Aidat', '2': 'Gider', '3': 'Diğer' };
+                        const secilenTur = turMap[tur] || 'Diğer';
+
+                        let aciklama = '';
+                        let iliskiliKayit = '';
+                        let tutar = 0;
+
+                        if (secilenTur === 'Diğer') {
+                            aciklama = prompt('Bu makbuz ne ile ilgili? (Açıklama girin)', '');
+                        } else {
+                            aciklama = prompt('Açıklama (isteğe bağlı)', '');
+                        }
+
+                        const tutarStr = prompt('Tutar (₺)', '0');
+                        tutar = parseFloat(tutarStr) || 0;
+
+                        const makbuz = {
+                            id: Date.now() + Math.random(),
+                            isim: file.name,
+                            tur: secilenTur,
+                            aciklama: aciklama || '',
+                            iliskiliKayit: iliskiliKayit || '',
+                            tutar: tutar,
+                            tip: file.type.startsWith('image/') ? 'image' : 'pdf',
+                            data: e.target.result,
+                            tarih: new Date().toISOString().split('T')[0],
+                            boyut: file.size
+                        };
+
+                        makbuzlar.push(makbuz);
+                        localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
+                        filterMakbuzlar();
+                        populateYearFilters();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function filterMakbuzlar() {
+            const yilFilter = document.getElementById('filterMakbuzYil')?.value;
+            const turFilter = document.getElementById('filterMakbuzTur')?.value;
+            const blokFilter = document.getElementById('filterMakbuzBlok')?.value;
+            const dosyaFilter = document.getElementById('filterMakbuzDosya')?.value;
+
+            let filtered = makbuzlar;
+
+            if (yilFilter) {
+                filtered = filtered.filter(m => {
+                    const year = new Date(m.tarih).getFullYear();
+                    return year == yilFilter;
+                });
+            }
+
+            if (turFilter) {
+                filtered = filtered.filter(m => m.tur === turFilter);
+            }
+
+            if (blokFilter) {
+                filtered = filtered.filter(m => m.blok === blokFilter);
+            }
+
+            if (dosyaFilter) {
+                filtered = filtered.filter(m => m.tip === dosyaFilter);
+            }
+
+            displayMakbuzlar(filtered);
+        }
+
+        function displayMakbuzlar(data) {
+            const grid = document.getElementById('makbuzGrid');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                grid.innerHTML = '<div class="no-data" style="grid-column: 1/-1;">Henüz makbuz yok</div>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(makbuz => {
+                const item = document.createElement('div');
+                item.className = 'makbuz-item';
+
+                const detaylar = [];
+                if (makbuz.tutar) detaylar.push(`${makbuz.tutar.toFixed(2)} ₺`);
+                if (makbuz.blok && makbuz.daire) detaylar.push(`${makbuz.blok} Blok Daire ${makbuz.daire}`);
+                if (makbuz.giderTuru) detaylar.push(makbuz.giderTuru);
+                if (makbuz.aciklama) detaylar.push(makbuz.aciklama);
+
+                if (makbuz.tip === 'image') {
+                    item.innerHTML = `
+                        <button class="makbuz-delete" onclick="deleteMakbuz(${makbuz.id})">×</button>
+                        <img src="${makbuz.data}" onclick="openModal('${makbuz.data}')" alt="${makbuz.isim}">
+                        <div class="info"><strong>${makbuz.tur}</strong></div>
+                        ${detaylar.map(d => `<div class="info">${d}</div>`).join('')}
+                        <div class="info">${new Date(makbuz.tarih).toLocaleDateString('tr-TR')}</div>
+                        <div class="info">${(makbuz.boyut / 1024).toFixed(0)} KB</div>
+                    `;
+                } else {
+                    item.innerHTML = `
+                        <button class="makbuz-delete" onclick="deleteMakbuz(${makbuz.id})">×</button>
+                        <div class="pdf-icon" onclick="downloadPdf(${makbuz.id})">📄</div>
+                        <div class="info"><strong>${makbuz.tur}</strong></div>
+                        ${detaylar.map(d => `<div class="info">${d}</div>`).join('')}
+                        <div class="info">${new Date(makbuz.tarih).toLocaleDateString('tr-TR')}</div>
+                        <div class="info">${(makbuz.boyut / 1024).toFixed(0)} KB</div>
+                    `;
+                }
+
+                grid.appendChild(item);
+            });
+        }
+
+        function deleteMakbuz(id) {
+            if (confirm('Bu makbuzu silmek istediğinizden emin misiniz?')) {
+                makbuzlar = makbuzlar.filter(m => m.id !== id);
+                localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
+
+                // Firebase'den sil
+                db.collection("makbuzlar").doc(id.toString()).delete();
+
+                filterMakbuzlar();
+                populateYearFilters();
+            }
+        }
+
+        function openModal(imgSrc) {
+            document.getElementById('modalImage').src = imgSrc;
+            document.getElementById('makbuzModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('makbuzModal').classList.remove('show');
+        }
+
+        function downloadPdf(id) {
+            const makbuz = makbuzlar.find(m => m.id === id);
+            if (makbuz) {
+                const link = document.createElement('a');
+                link.href = makbuz.data;
+                link.download = makbuz.isim;
+                link.click();
+            }
+        }
+
+        function downloadAllReceipts() {
+            if (makbuzlar.length === 0) {
+                alert('İndirilecek makbuz yok!');
+                return;
+            }
+
+            makbuzlar.forEach((makbuz, index) => {
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = makbuz.data;
+                    link.download = `${index + 1}_${makbuz.isim}`;
+                    link.click();
+                }, index * 500);
+            });
+        }
+
+        // Makbuz formundaki tür değişiminde ilgili alanları göster/gizle
+        function toggleMakbuzAciklama() {
+            const tur = document.getElementById('makbuzTur').value;
+            const giderTurDiv = document.getElementById('makbuzGiderTurDiv');
+            const blokDiv = document.getElementById('makbuzBlokDiv');
+            const daireDiv = document.getElementById('makbuzDaireDiv');
+            const aciklamaDiv = document.getElementById('makbuzAciklamaDiv');
+
+            if (tur === 'Gider') {
+                giderTurDiv.style.display = 'block';
+                blokDiv.style.display = 'none';
+                daireDiv.style.display = 'none';
+                aciklamaDiv.style.display = 'none';
+            } else if (tur === 'Aidat') {
+                giderTurDiv.style.display = 'none';
+                blokDiv.style.display = 'block';
+                daireDiv.style.display = 'block';
+                aciklamaDiv.style.display = 'none';
+            } else if (tur === 'Diğer') {
+                giderTurDiv.style.display = 'none';
+                blokDiv.style.display = 'none';
+                daireDiv.style.display = 'none';
+                aciklamaDiv.style.display = 'block';
+            } else {
+                giderTurDiv.style.display = 'none';
+                blokDiv.style.display = 'none';
+                daireDiv.style.display = 'none';
+                aciklamaDiv.style.display = 'none';
+            }
+        }
+
+        // Makbuz blok değişiminde daire listesini güncelle
+        document.addEventListener('DOMContentLoaded', function () {
+            const makbuzBlok = document.getElementById('makbuzBlok');
+            if (makbuzBlok) {
+                makbuzBlok.addEventListener('change', function () {
+                    updateDaireSelect('makbuzDaire', this.value);
+                });
+            }
+        });
+
+        // Detaylı makbuz kaydetme
+        function saveMakbuzWithDetails(event) {
+            event.preventDefault();
+
+            const dosya = document.getElementById('makbuzDosya').files[0];
+            if (!dosya) {
+                alert('Lütfen bir dosya seçin!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const tur = document.getElementById('makbuzTur').value;
+                let aciklama = '';
+
+                if (tur === 'Aidat') {
+                    const blok = document.getElementById('makbuzBlok').value;
+                    const daire = document.getElementById('makbuzDaire').value;
+                    aciklama = `${blok} Blok Daire ${daire} Aidatı`;
+                } else if (tur === 'Gider') {
+                    const giderTuru = document.getElementById('makbuzGiderTur').value;
+                    aciklama = giderTuru || 'Gider';
+                } else {
+                    aciklama = document.getElementById('makbuzAciklama').value || 'Diğer';
+                }
+
+                const makbuz = {
+                    id: Date.now() + Math.random(),
+                    isim: dosya.name,
+                    tur: tur,
+                    tip: dosya.type.startsWith('image/') ? 'image' : 'pdf',
+                    data: e.target.result,
+                    tarih: document.getElementById('makbuzTarih').value,
+                    boyut: dosya.size,
+                    blok: document.getElementById('makbuzBlok').value || '',
+                    daire: document.getElementById('makbuzDaire').value || '',
+                    tutar: parseFloat(document.getElementById('makbuzTutar').value) || 0,
+                    giderTuru: document.getElementById('makbuzGiderTur').value || '',
+                    aciklama: aciklama
+                };
+
+                makbuzlar.push(makbuz);
+                localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
+
+                alert('Makbuz başarıyla eklendi!');
+                event.target.reset();
+                toggleMakbuzAciklama();
+                filterMakbuzlar();
+                populateYearFilters();
+            };
+            reader.readAsDataURL(dosya);
+        }
+
+        // Daireleri başlat
+        function initializeDaireler() {
+            if (daireler.length === 0) {
+                const bloklar = ['A', 'B', 'C'];
+                bloklar.forEach(blok => {
+                    for (let i = 1; i <= 12; i++) {
+                        daireler.push({
+                            blok: blok,
+                            no: i,
+                            evSahibi: '',
+                            telefon: ''
+                        });
+                    }
+                });
+
+                // A Blok - Dükkan 1 ve 2
+                daireler.push({
+                    blok: 'A',
+                    no: 'Dükkan 1',
+                    evSahibi: '',
+                    telefon: ''
+                });
+                daireler.push({
+                    blok: 'A',
+                    no: 'Dükkan 2',
+                    evSahibi: '',
+                    telefon: ''
+                });
+
+                // B Blok - Kapıcı Dairesi
+                daireler.push({
+                    blok: 'B',
+                    no: 'Kapıcı Dairesi',
+                    evSahibi: '',
+                    telefon: ''
+                });
+
+                // C Blok - Dükkan 3
+                daireler.push({
+                    blok: 'C',
+                    no: 'Dükkan 3',
+                    evSahibi: '',
+                    telefon: ''
+                });
+
+                localStorage.setItem('daireler', JSON.stringify(daireler));
+            }
+        }
+
+        // Blok seçildiğinde daire listesini güncelle
+        document.addEventListener('DOMContentLoaded', function () {
+            const aidatBlok = document.getElementById('aidatBlok');
+            if (aidatBlok) {
+                aidatBlok.addEventListener('change', function () {
+                    updateDaireSelect('aidatDaire', this.value);
+                });
+            }
+
+            const daireBlok = document.getElementById('daireBlok');
+            if (daireBlok) {
+                daireBlok.addEventListener('change', function () {
+                    updateDaireSelect('daireNo', this.value);
+                });
+            }
+        });
+
+        // Bölüm göster
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const section = document.getElementById(sectionId);
+            if (section) section.classList.add('active');
+
+            if (sectionId === 'rapor') {
+                updateRaporlar();
+            }
+        }
+
+        // Aidat kaydet
+        function saveAidat(event) {
+            event.preventDefault();
+
+            const aidat = {
+                id: Date.now(),
+                tarih: document.getElementById('aidatTarih').value,
+                blok: document.getElementById('aidatBlok').value,
+                daire: document.getElementById('aidatDaire').value,
+                ay: document.getElementById('aidatAy').value,
+                tutar: parseFloat(document.getElementById('aidatTutar').value)
+            };
+
+            aidatlar.push(aidat);
+            localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
+
+            showSuccessMessage('aidatSuccess');
+            event.target.reset();
+            filterAidatTable();
+            populateYearFilters();
+        }
+
+        // Gider kaydet
+        function saveGider(event) {
+            event.preventDefault();
+
+            const gider = {
+                id: Date.now(),
+                tarih: document.getElementById('giderTarih').value,
+                tur: document.getElementById('giderTur').value,
+                aciklama: document.getElementById('giderAciklama').value,
+                tutar: parseFloat(document.getElementById('giderTutar').value)
+            };
+
+            giderler.push(gider);
+            localStorage.setItem('giderler', JSON.stringify(giderler));
+
+            showSuccessMessage('giderSuccess');
+            event.target.reset();
+            filterGiderTable();
+            populateYearFilters();
+        }
+
+        // Daire kaydet
+        function saveDaire(event) {
+            event.preventDefault();
+
+            const blok = document.getElementById('daireBlok').value;
+            const no = parseInt(document.getElementById('daireNo').value);
+            const evSahibi = document.getElementById('daireEvSahibi').value;
+            const telefon = document.getElementById('daireTelefon').value;
+
+            const index = daireler.findIndex(d => d.blok === blok && d.no === no);
+            if (index !== -1) {
+                daireler[index].evSahibi = evSahibi;
+                daireler[index].telefon = telefon;
+                localStorage.setItem('daireler', JSON.stringify(daireler));
+
+                // Firebase'e kaydet
+                db.collection("daireler").doc(`${blok}_${no}`).set(daireler[index]);
+
+                showSuccessMessage('daireSuccess');
+                event.target.reset();
+                filterDaireTable();
+            }
+        }
+
+        // Başarı mesajı göster
+        function showSuccessMessage(id) {
+            const msg = document.getElementById(id);
+            if (!msg) return;
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 3000);
+        }
+
+        // Aidat filtreleme - YIL DESTEĞİ İLE
         function filterAidatTable() {
-            const blokFilter = document.getElementById('filterAidatBlok').value;
-            const ayFilter = document.getElementById('filterAidatAy').value;
-            const daireFilter = document.getElementById('filterAidatDaire').value;
+            const yilFilter = document.getElementById('filterAidatYil')?.value;
+            const blokFilter = document.getElementById('filterAidatBlok')?.value;
+            const ayFilter = document.getElementById('filterAidatAy')?.value;
+            const daireFilter = document.getElementById('filterAidatDaire')?.value;
 
             let filtered = aidatlar;
-            
+
+            if (yilFilter) {
+                filtered = filtered.filter(a => {
+                    const year = new Date(a.tarih).getFullYear();
+                    return year == yilFilter;
+                });
+            }
             if (blokFilter) {
                 filtered = filtered.filter(a => a.blok === blokFilter);
             }
@@ -1045,13 +2322,21 @@
             updateAidatTable(filtered);
         }
 
+        // Gider filtreleme - YIL DESTEĞİ İLE
         function filterGiderTable() {
-            const turFilter = document.getElementById('filterGiderTur').value;
-            const baslangic = document.getElementById('filterGiderBaslangic').value;
-            const bitis = document.getElementById('filterGiderBitis').value;
+            const yilFilter = document.getElementById('filterGiderYil')?.value;
+            const turFilter = document.getElementById('filterGiderTur')?.value;
+            const baslangic = document.getElementById('filterGiderBaslangic')?.value;
+            const bitis = document.getElementById('filterGiderBitis')?.value;
 
             let filtered = giderler;
-            
+
+            if (yilFilter) {
+                filtered = filtered.filter(g => {
+                    const year = new Date(g.tarih).getFullYear();
+                    return year == yilFilter;
+                });
+            }
             if (turFilter) {
                 filtered = filtered.filter(g => g.tur === turFilter);
             }
@@ -1066,17 +2351,25 @@
         }
 
         function filterDaireTable() {
-            const blokFilter = document.getElementById('filterDaireBlok').value;
-            const daireFilter = document.getElementById('filterDaireNo').value;
+            const blokFilter = document.getElementById('filterDaireBlok')?.value;
+            const daireFilter = document.getElementById('filterDaireNo')?.value;
 
             let filtered = daireler;
-            
+
             if (blokFilter) {
                 filtered = filtered.filter(d => d.blok === blokFilter);
             }
             if (daireFilter) {
                 filtered = filtered.filter(d => d.no == daireFilter);
             }
+
+            // Bloğa ve Daire No'ya göre sırala (Numerik sıralama desteği ile)
+            filtered.sort((a, b) => {
+                if (a.blok !== b.blok) {
+                    return a.blok.localeCompare(b.blok);
+                }
+                return String(a.no).localeCompare(String(b.no), undefined, { numeric: true });
+            });
 
             updateDaireTable(filtered);
         }
@@ -1085,7 +2378,7 @@
         function updateAidatTable(data = aidatlar) {
             const tbody = document.getElementById('aidatTableBody');
             tbody.innerHTML = '';
-            
+
             if (data.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" class="no-data">Henüz aidat kaydı yok</td></tr>';
                 return;
@@ -1108,7 +2401,7 @@
         function updateGiderTable(data = giderler) {
             const tbody = document.getElementById('giderTableBody');
             tbody.innerHTML = '';
-            
+
             if (data.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" class="no-data">Henüz gider kaydı yok</td></tr>';
                 return;
@@ -1129,8 +2422,9 @@
 
         function updateDaireTable(data = daireler) {
             const tbody = document.getElementById('daireTableBody');
+            if (!tbody) return;
             tbody.innerHTML = '';
-            
+
             data.forEach(daire => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -1154,6 +2448,14 @@
             if (confirm('Bu ödemeyi silmek istediğinizden emin misiniz?')) {
                 aidatlar = aidatlar.filter(a => a.id !== id);
                 localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
+
+                // Firebase'den sil
+                db.collection("aidatlar").doc(id.toString()).delete();
+
+                // Makbuz varsa onu da sil
+                const terkaitMakbuz = makbuzlar.find(m => m.iliskiliKayit == id);
+                if (terkaitMakbuz) deleteMakbuz(terkaitMakbuz.id);
+
                 filterAidatTable();
                 updateRaporlar();
             }
@@ -1163,6 +2465,10 @@
             if (confirm('Bu gideri silmek istediğinizden emin misiniz?')) {
                 giderler = giderler.filter(g => g.id !== id);
                 localStorage.setItem('giderler', JSON.stringify(giderler));
+
+                // Firebase'den sil
+                db.collection("giderler").doc(id.toString()).delete();
+
                 filterGiderTable();
                 updateRaporlar();
             }
@@ -1170,18 +2476,31 @@
 
         // Raporları güncelle
         function updateRaporlar() {
+            const yilFilter = document.getElementById('filterRaporYil')?.value;
             const ayFilter = document.getElementById('filterRaporAy')?.value;
             const blokFilter = document.getElementById('filterRaporBlok')?.value;
 
             let filteredAidatlar = aidatlar;
             let filteredGiderler = giderler;
 
+            // Yıl filtreleme
+            if (yilFilter) {
+                filteredAidatlar = filteredAidatlar.filter(a => {
+                    const year = new Date(a.tarih).getFullYear();
+                    return year == yilFilter;
+                });
+                filteredGiderler = filteredGiderler.filter(g => {
+                    const year = new Date(g.tarih).getFullYear();
+                    return year == yilFilter;
+                });
+            }
+
             // Ay filtreleme
             if (ayFilter) {
                 filteredAidatlar = filteredAidatlar.filter(a => a.ay === ayFilter);
                 // Giderler için ay filtrelemesi (tarih üzerinden)
-                const aylar = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 
-                               'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+                const aylar = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+                    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
                 const ayIndex = aylar.indexOf(ayFilter);
                 if (ayIndex !== -1) {
                     filteredGiderler = filteredGiderler.filter(g => {
@@ -1212,7 +2531,7 @@
 
             const tbody = document.getElementById('giderDagılımBody');
             tbody.innerHTML = '';
-            
+
             if (Object.keys(giderDagilim).length === 0) {
                 tbody.innerHTML = '<tr><td colspan="2" class="no-data">Gider kaydı yok</td></tr>';
             } else {
@@ -1240,7 +2559,7 @@
 
             const blokBody = document.getElementById('blokAidatBody');
             blokBody.innerHTML = '';
-            
+
             ['A', 'B', 'C'].forEach(blok => {
                 const data = blokAidat[blok] || { toplam: 0, adet: 0 };
                 const tr = document.createElement('tr');
@@ -1260,7 +2579,7 @@
             const daireFilter = document.getElementById('filterAidatDaire').value;
 
             let filtered = aidatlar;
-            
+
             if (blokFilter) filtered = filtered.filter(a => a.blok === blokFilter);
             if (ayFilter) filtered = filtered.filter(a => a.ay === ayFilter);
             if (daireFilter) filtered = filtered.filter(a => a.daire == daireFilter);
@@ -1279,7 +2598,7 @@
             const bitis = document.getElementById('filterGiderBitis').value;
 
             let filtered = giderler;
-            
+
             if (turFilter) filtered = filtered.filter(g => g.tur === turFilter);
             if (baslangic) filtered = filtered.filter(g => g.tarih >= baslangic);
             if (bitis) filtered = filtered.filter(g => g.tarih <= bitis);
@@ -1298,7 +2617,7 @@
             const daireFilter = document.getElementById('filterDaireNo').value;
 
             let filtered = daireler;
-            
+
             if (blokFilter) filtered = filtered.filter(d => d.blok === blokFilter);
             if (daireFilter) filtered = filtered.filter(d => d.no == daireFilter);
 
@@ -1315,7 +2634,7 @@
             const blokFilter = document.getElementById('filterRaporBlok').value;
 
             let csv = 'ÖZAYDENİZ SİTESİ - GENEL RAPOR\n\n';
-            
+
             if (ayFilter) csv += `Ay: ${ayFilter}\n`;
             if (blokFilter) csv += `Blok: ${blokFilter} Blok\n`;
             csv += '\n';
@@ -1367,6 +2686,122 @@
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('aidatTarih')?.setAttribute('value', today);
         document.getElementById('giderTarih')?.setAttribute('value', today);
+        document.getElementById('makbuzTarih')?.setAttribute('value', today);
+
+        // Aidat ve Gider kayıt fonksiyonlarını makbuz desteği ile override et
+        const originalSaveAidat = saveAidat;
+        saveAidat = function (event) {
+            event.preventDefault();
+
+            const aidat = {
+                id: Date.now(),
+                tarih: document.getElementById('aidatTarih').value,
+                blok: document.getElementById('aidatBlok').value,
+                daire: document.getElementById('aidatDaire').value,
+                ay: document.getElementById('aidatAy').value,
+                tutar: parseFloat(document.getElementById('aidatTutar').value)
+            };
+
+            aidatlar.push(aidat);
+            localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
+
+            // Firebase'e kaydet
+            db.collection("aidatlar").doc(aidat.id.toString()).set(aidat);
+
+            // Makbuz varsa kaydet
+            const makbuzFile = document.getElementById('aidatMakbuz')?.files[0];
+            if (makbuzFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const makbuz = {
+                        id: Date.now() + Math.random(),
+                        isim: makbuzFile.name,
+                        tur: 'Aidat',
+                        tip: makbuzFile.type.startsWith('image/') ? 'image' : 'pdf',
+                        data: e.target.result,
+                        tarih: aidat.tarih,
+                        boyut: makbuzFile.size,
+                        blok: aidat.blok,
+                        daire: aidat.daire,
+                        tutar: aidat.tutar,
+                        giderTuru: '',
+                        aciklama: `${aidat.blok} Blok Daire ${aidat.daire} - ${aidat.ay} Aidatı`
+                    };
+                    makbuzlar.push(makbuz);
+                    localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
+
+                    // Firebase'e kaydet (1MB altındaysa)
+                    if (JSON.stringify(makbuz).length < 1000000) {
+                        db.collection("makbuzlar").doc(makbuz.id.toString()).set(makbuz);
+                    }
+                    populateYearFilters();
+                    filterMakbuzlar();
+                };
+                reader.readAsDataURL(makbuzFile);
+            }
+
+            showSuccessMessage('aidatSuccess');
+            event.target.reset();
+            filterAidatTable();
+            populateYearFilters();
+        };
+
+        const originalSaveGider = saveGider;
+        saveGider = function (event) {
+            event.preventDefault();
+
+            const gider = {
+                id: Date.now(),
+                tarih: document.getElementById('giderTarih').value,
+                tur: document.getElementById('giderTur').value,
+                aciklama: document.getElementById('giderAciklama').value,
+                tutar: parseFloat(document.getElementById('giderTutar').value)
+            };
+
+            giderler.push(gider);
+            localStorage.setItem('giderler', JSON.stringify(giderler));
+
+            // Firebase'e kaydet
+            db.collection("giderler").doc(gider.id.toString()).set(gider);
+
+            // Makbuz varsa kaydet
+            const makbuzFile = document.getElementById('giderMakbuz')?.files[0];
+            if (makbuzFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const makbuz = {
+                        id: Date.now() + Math.random(),
+                        isim: makbuzFile.name,
+                        tur: 'Gider',
+                        tip: makbuzFile.type.startsWith('image/') ? 'image' : 'pdf',
+                        data: e.target.result,
+                        tarih: gider.tarih,
+                        boyut: makbuzFile.size,
+                        blok: '',
+                        daire: '',
+                        tutar: gider.tutar,
+                        giderTuru: gider.tur,
+                        aciklama: gider.aciklama || gider.tur
+                    };
+                    makbuzlar.push(makbuz);
+                    localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
+
+                    // Firebase'e kaydet (1MB altındaysa)
+                    if (JSON.stringify(makbuz).length < 1000000) {
+                        db.collection("makbuzlar").doc(makbuz.id.toString()).set(makbuz);
+                    }
+                    populateYearFilters();
+                    filterMakbuzlar();
+                };
+                reader.readAsDataURL(makbuzFile);
+            }
+
+            showSuccessMessage('giderSuccess');
+            event.target.reset();
+            filterGiderTable();
+            populateYearFilters();
+        };
     </script>
 </body>
+
 </html>
