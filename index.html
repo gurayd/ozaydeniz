@@ -347,6 +347,46 @@
             font-size: 14px;
         }
 
+        /* Navigasyon Sekmeleri */
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            background: #f8f9fa;
+            color: #555;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+
+        .nav-tab:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -727,30 +767,17 @@
             </div>
         </div>
 
-        <!-- Ana Menü -->
-        <div id="mainMenu" class="section active">
-            <div class="menu-buttons">
-                <button class="menu-btn btn-aidat" onclick="showSection('aidat')">
-                    💰 Aidat İşlemleri
-                </button>
-                <button class="menu-btn btn-gider" onclick="showSection('gider')">
-                    📝 Gider Ekle
-                </button>
-                <button class="menu-btn btn-daire" onclick="showSection('daire')">
-                    🏠 Daire Bilgileri
-                </button>
-                <button class="menu-btn btn-makbuz" onclick="showSection('makbuz')">
-                    📄 Makbuz Arşivi
-                </button>
-                <button class="menu-btn btn-rapor" onclick="showSection('rapor')">
-                    📊 Raporlar
-                </button>
-            </div>
+        <!-- Navigasyon Sekmeleri -->
+        <div class="nav-tabs" id="mainNavTabs">
+            <div class="nav-tab active" onclick="showSection('aidat')">💰 Aidat İşlemleri</div>
+            <div class="nav-tab" onclick="showSection('gider')">📝 Gider Ekle</div>
+            <div class="nav-tab" onclick="showSection('daire')">🏠 Daire Bilgileri</div>
+            <div class="nav-tab" onclick="showSection('makbuz')">📄 Makbuz Arşivi</div>
+            <div class="nav-tab" onclick="showSection('rapor')">📊 Raporlar</div>
         </div>
 
         <!-- Aidat İşlemleri -->
-        <div id="aidat" class="section">
-            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
+        <div id="aidat" class="section active">
 
             <div class="section-header">
                 <h2>Aidat Ödemesi Kaydet</h2>
@@ -881,7 +908,6 @@
 
         <!-- Gider Ekle -->
         <div id="gider" class="section">
-            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
 
             <div class="section-header">
                 <h2>Yeni Gider Ekle</h2>
@@ -985,7 +1011,6 @@
 
         <!-- Daire Bilgileri -->
         <div id="daire" class="section">
-            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
 
             <div class="section-header">
                 <h2>Daire Bilgileri</h2>
@@ -1066,7 +1091,6 @@
 
         <!-- Raporlar -->
         <div id="rapor" class="section">
-            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
 
             <div class="section-header">
                 <h2>Genel Durum</h2>
@@ -1159,7 +1183,6 @@
 
         <!-- Makbuz Arşivi -->
         <div id="makbuz" class="section">
-            <button class="back-btn" onclick="showSection('mainMenu')">← Ana Menüye Dön</button>
 
             <div class="section-header">
                 <h2>Makbuz Arşivi</h2>
@@ -1425,6 +1448,9 @@
                 autoSyncToCloud().then(() => {
                     startFirebaseListeners();
                 });
+
+                // İlk sekmeyi göster
+                showSection('aidat');
             } else {
                 showLoginError('Kullanıcı adı veya şifre hatalı!');
             }
@@ -2215,9 +2241,18 @@
 
         // Bölüm göster
         function showSection(sectionId) {
+            // Seksiyonları değiştir
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             const section = document.getElementById(sectionId);
             if (section) section.classList.add('active');
+
+            // Sekmeleri güncelle
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('onclick').includes(`'${sectionId}'`)) {
+                    tab.classList.add('active');
+                }
+            });
 
             if (sectionId === 'rapor') {
                 updateRaporlar();
