@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Özaydeniz Sitesi Yönetim Paneli</title>
+    <!-- Flatpickr for Turkish Date Support -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/tr.js"></script>
     <style>
         * {
             margin: 0;
@@ -161,26 +165,45 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .header-left h1 {
-            font-size: 26px;
+            font-size: 16px;
             color: #333;
-            margin-bottom: 5px;
+            margin: 0;
+            line-height: 1.2;
+            white-space: nowrap;
         }
 
         .header-left p {
-            font-size: 14px;
+            font-size: 10px;
             color: #666;
+            margin: 1px 0 0 0;
+            padding-left: 28px;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .header-right {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
+        }
+
+        .header-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
         .backup-btn,
@@ -210,15 +233,60 @@
             font-weight: 600;
         }
 
+        .logout-btn,
+        .rapor-header-btn {
+            padding: 6px 12px;
+            font-size: 11px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
         .logout-btn {
-            padding: 8px 16px;
-            font-size: 13px;
-            background: #dc3545;
+            background: transparent;
+            color: #666;
+            font-size: 20px;
+            padding: 4px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .rapor-header-btn {
+            background: #28a745;
+        }
+
+        .icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            min-width: 40px;
+            height: 40px;
+            font-size: 24px;
+            font-weight: bold;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
+            line-height: 1;
+            padding: 0;
+            flex-shrink: 0;
         }
 
         .logout-btn:hover {
@@ -349,42 +417,46 @@
 
         /* Navigasyon Sekmeleri */
         .nav-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 15px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
         }
 
         .nav-tab {
-            padding: 10px 20px;
-            font-size: 15px;
+            padding: 12px 10px;
+            font-size: 13px;
             font-weight: 600;
-            background: #f8f9fa;
+            background: #f0f2f5;
             color: #555;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
-            user-select: none;
+            justify-content: center;
+            gap: 6px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .nav-tab i {
+            font-size: 20px;
         }
 
         .nav-tab:hover {
-            background: #f0f0f0;
-            transform: translateY(-2px);
-            border-color: #667eea;
-            color: #667eea;
+            background: #e4e6e9;
         }
 
         .nav-tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
 
         .modal {
@@ -475,7 +547,7 @@
         }
 
         .section-header h2 {
-            font-size: 24px;
+            font-size: 18px;
             color: #333;
         }
 
@@ -515,42 +587,82 @@
 
         .filter-group {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .filter-group label {
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 5px;
             color: #555;
+            min-width: 60px;
+            margin-bottom: 0px;
         }
 
         .filter-group select,
         .filter-group input {
+            flex: 1;
             padding: 8px;
             font-size: 14px;
             border: 1px solid #ddd;
             border-radius: 6px;
         }
 
+        /* Özel Dosya Seç Butonu */
+        .file-upload-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .file-upload-btn {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .file-upload-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .file-name-display {
+            font-size: 13px;
+            color: #666;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 6px;
         }
 
         .form-group label {
-            display: block;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 8px;
             color: #333;
+            margin-bottom: 2px;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            font-size: 15px;
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-family: inherit;
@@ -760,20 +872,21 @@
                 <p>Site Yönetim Paneli</p>
             </div>
             <div class="header-right">
-                <button class="backup-btn" onclick="backupData()">💾 Yedekle</button>
-                <button class="import-btn" onclick="document.getElementById('importFile').click()">📥 İçe Aktar</button>
-                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
-                <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>
+                <div class="header-buttons">
+                    <button class="rapor-header-btn" style="background: #4776e6;" onclick="showSection('daire')">🏠
+                        Daire Bilgileri</button>
+                    <button class="rapor-header-btn" onclick="showSection('rapor')">📊 Raporlar</button>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()" title="Çıkış Yap">🚪</button>
             </div>
         </div>
 
         <!-- Navigasyon Sekmeleri -->
         <div class="nav-tabs" id="mainNavTabs">
-            <div class="nav-tab active" onclick="showSection('aidat')">💰 Aidat İşlemleri</div>
-            <div class="nav-tab" onclick="showSection('gider')">📝 Gider Ekle</div>
-            <div class="nav-tab" onclick="showSection('daire')">🏠 Daire Bilgileri</div>
-            <div class="nav-tab" onclick="showSection('makbuz')">📄 Makbuz Arşivi</div>
-            <div class="nav-tab" onclick="showSection('rapor')">📊 Raporlar</div>
+            <div class="nav-tab active" onclick="showSection('aidat')"><i>💰</i>Aidat İşlemleri</div>
+            <div class="nav-tab" onclick="showSection('gider')"><i>📝</i>Gider Ekle</div>
+            <div class="nav-tab" onclick="showSection('gelir')"><i>📈</i>Gelir Ekle</div>
+            <div class="nav-tab" onclick="showSection('makbuz')"><i>📄</i>Makbuz Arşivi</div>
         </div>
 
         <!-- Aidat İşlemleri -->
@@ -781,13 +894,12 @@
 
             <div class="section-header">
                 <h2>Aidat Ödemesi Kaydet</h2>
-                <button class="export-btn" onclick="exportAidatToExcel()">📊 Excel'e Aktar</button>
             </div>
 
             <div class="success-message" id="aidatSuccess">Aidat ödemesi kaydedildi!</div>
 
             <form onsubmit="saveAidat(event)">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div class="form-group">
                         <label>Blok Seçin:</label>
                         <select id="aidatBlok" required>
@@ -825,6 +937,13 @@
                     </div>
 
                     <div class="form-group">
+                        <label>Yıl:</label>
+                        <select id="aidatYil" required>
+                            <!-- JS ile doldurulacak -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label>Tutar (₺):</label>
                         <input type="number" id="aidatTutar" required step="0.01" placeholder="Örnek: 500">
                     </div>
@@ -835,10 +954,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Makbuz Yükle (İsteğe Bağlı):</label>
-                    <input type="file" id="aidatMakbuz" accept="image/*,.pdf" style="padding: 10px;">
-                </div>
+                <!-- Makbuz yükleme aidat için kaldırıldı -->
 
                 <button type="submit" class="submit-btn">Ödemeyi Kaydet</button>
             </form>
@@ -881,7 +997,7 @@
                     </div>
                     <div class="filter-group">
                         <label>Daire</label>
-                        <input type="number" id="filterAidatDaire" placeholder="Daire No" min="1" max="12"
+                        <input type="number" id="filterAidatDaire" placeholder="Daire No" min="1" max="14"
                             onchange="filterAidatTable()">
                     </div>
                 </div>
@@ -911,26 +1027,32 @@
 
             <div class="section-header">
                 <h2>Yeni Gider Ekle</h2>
-                <button class="export-btn" onclick="exportGiderToExcel()">📊 Excel'e Aktar</button>
             </div>
 
             <div class="success-message" id="giderSuccess">Gider kaydedildi!</div>
 
             <form onsubmit="saveGider(event)">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
                     <div class="form-group">
                         <label>Gider Türü:</label>
-                        <select id="giderTur" required>
-                            <option value="">Gider Türü Seçin</option>
-                            <option value="Asansör Giderleri">Asansör Giderleri</option>
-                            <option value="Bina Temizlik">Bina Temizlik</option>
-                            <option value="Bahçe Bakımı">Bahçe Bakımı</option>
-                            <option value="Su Arıtma Tuz">Su Arıtma Tuz Gideri</option>
-                            <option value="Hidrofor Bakım">Hidrofor Sistemi Bakım</option>
-                            <option value="Elektrik">Elektrik Gideri</option>
-                            <option value="Su">Su Gideri</option>
-                            <option value="Diğer">Diğer</option>
-                        </select>
+                        <div style="display: flex; gap: 8px; width: 100%; align-items: center;">
+                            <select id="giderTur" required style="flex: 1;">
+                                <option value="">Gider Türü Seçin</option>
+                                <option value="Yönetici Ücreti">Yönetici Ücreti</option>
+                                <option value="Asansör Giderleri">Asansör Giderleri</option>
+                                <option value="Bina Temizlik">Bina Temizlik</option>
+                                <option value="Bahçe Bakımı">Bahçe Bakımı</option>
+                                <option value="Su Arıtma Tuz">Su Arıtma Tuz Gideri</option>
+                                <option value="Hidrofor Bakım">Hidrofor Sistemi Bakım</option>
+                                <option value="Elektrik">Elektrik Gideri</option>
+                                <option value="Su">Su Gideri</option>
+                                <option value="Diğer">Diğer</option>
+                            </select>
+                            <button type="button" class="icon-btn" onclick="addNewGiderTur()"
+                                style="background: #667eea;">+</button>
+                            <button type="button" class="icon-btn" onclick="removeGiderTur()"
+                                style="background: #dc3545;">-</button>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -950,8 +1072,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Makbuz Yükle (İsteğe Bağlı):</label>
-                    <input type="file" id="giderMakbuz" accept="image/*,.pdf" style="padding: 10px;">
+                    <label>Makbuz Yükle:</label>
+                    <div class="file-upload-wrapper">
+                        <button type="button" class="file-upload-btn"
+                            onclick="document.getElementById('giderMakbuz').click()">Dosya Seç</button>
+                        <span id="giderMakbuzName" class="file-name-display">Dosya seçilmedi</span>
+                        <input type="file" id="giderMakbuz" accept="image/*,.pdf" style="display: none;"
+                            onchange="document.getElementById('giderMakbuzName').textContent = this.files[0]?.name || 'Dosya seçilmedi'">
+                    </div>
                 </div>
 
                 <button type="submit" class="submit-btn">Gideri Kaydet</button>
@@ -970,6 +1098,7 @@
                         <label>Gider Türü</label>
                         <select id="filterGiderTur" onchange="filterGiderTable()">
                             <option value="">Tümü</option>
+                            <option value="Yönetici Ücreti">Yönetici Ücreti</option>
                             <option value="Asansör Giderleri">Asansör Giderleri</option>
                             <option value="Bina Temizlik">Bina Temizlik</option>
                             <option value="Bahçe Bakımı">Bahçe Bakımı</option>
@@ -1009,18 +1138,153 @@
             </div>
         </div>
 
+        <!-- Gelir Ekle -->
+        <div id="gelir" class="section">
+            <div class="section-header">
+                <h2>Gelir Kaydet</h2>
+            </div>
+            <div class="success-message" id="gelirSuccess">Gelir kaydı başarılı!</div>
+
+            <form onsubmit="saveGelir(event)">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label>Blok Seçin:</label>
+                        <select id="gelirBlok" required>
+                            <option value="">Blok Seçin</option>
+                            <option value="A">A Blok</option>
+                            <option value="B">B Blok</option>
+                            <option value="C">C Blok</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Daire No:</label>
+                        <select id="gelirDaire" required>
+                            <option value="">Önce Blok Seçin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gelir Türü:</label>
+                        <div style="display: flex; gap: 8px; width: 100%; align-items: center;">
+                            <select id="gelirTur" required style="flex: 1;">
+                                <option value="">Tür Seçin</option>
+                                <option value="Hidrofor Bakım">Hidrofor Bakım</option>
+                                <option value="Asansör Bakım">Asansör Bakım</option>
+                                <option value="Çatı Bakım">Çatı Bakım</option>
+                                <option value="Diğer">Diğer</option>
+                            </select>
+                            <button type="button" class="icon-btn" onclick="addNewGelirTur()"
+                                style="background: #667eea;">+</button>
+                            <button type="button" class="icon-btn" onclick="removeGelirTur()"
+                                style="background: #dc3545;">-</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tutar (₺):</label>
+                        <input type="number" id="gelirTutar" step="0.01" required placeholder="0.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tarih:</label>
+                        <input type="date" id="gelirTarih" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Açıklama:</label>
+                    <textarea id="gelirAciklama" rows="2" placeholder="Gelir detaylarını yazın..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Makbuz Yükle:</label>
+                    <div class="file-upload-wrapper">
+                        <button type="button" class="file-upload-btn"
+                            onclick="document.getElementById('gelirMakbuz').click()">Dosya Seç</button>
+                        <span id="gelirMakbuzName" class="file-name-display">Dosya seçilmedi</span>
+                        <input type="file" id="gelirMakbuz" accept="image/*,.pdf" style="display: none;"
+                            onchange="document.getElementById('gelirMakbuzName').textContent = this.files[0]?.name || 'Dosya seçilmedi'">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Geliri Kaydet</button>
+            </form>
+
+            <div class="filters">
+                <h3>🔍 Filtreleme</h3>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Yıl</label>
+                        <select id="filterGelirYil" onchange="filterGelirTable()">
+                            <option value="">Tümü</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Gelir Türü</label>
+                        <select id="filterGelirTur" onchange="filterGelirTable()">
+                            <option value="">Tümü</option>
+                            <option value="Hidrofor Bakım">Hidrofor Bakım</option>
+                            <option value="Asansör Bakım">Asansör Bakım</option>
+                            <option value="Çatı Bakım">Çatı Bakım</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Blok</label>
+                        <select id="filterGelirBlok" onchange="filterGelirTable()">
+                            <option value="">Tümü</option>
+                            <option value="A">A Blok</option>
+                            <option value="B">B Blok</option>
+                            <option value="C">C Blok</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Daire No</label>
+                        <input type="number" id="filterGelirDaire" oninput="filterGelirTable()" placeholder="Daire No">
+                    </div>
+                    <div class="filter-group">
+                        <label>Başlangıç Tarihi</label>
+                        <input type="date" id="filterGelirBaslangic" onchange="filterGelirTable()">
+                    </div>
+                    <div class="filter-group">
+                        <label>Bitiş Tarihi</label>
+                        <input type="date" id="filterGelirBitis" onchange="filterGelirTable()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3 style="font-size: 18px; margin-bottom: 15px;">Gelir Listesi</h3>
+                <table id="gelirTable">
+                    <thead>
+                        <tr>
+                            <th>Tarih</th>
+                            <th>Blok</th>
+                            <th>Daire</th>
+                            <th>Gelir Türü</th>
+                            <th>Açıklama</th>
+                            <th>Tutar</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gelirTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Daire Bilgileri -->
         <div id="daire" class="section">
 
             <div class="section-header">
                 <h2>Daire Bilgileri</h2>
-                <button class="export-btn" onclick="exportDaireToExcel()">📊 Excel'e Aktar</button>
             </div>
 
             <div class="success-message" id="daireSuccess">Daire bilgisi güncellendi!</div>
 
             <form onsubmit="saveDaire(event)">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
                     <div class="form-group">
                         <label>Blok:</label>
                         <select id="daireBlok" required>
@@ -1066,7 +1330,7 @@
                     </div>
                     <div class="filter-group">
                         <label>Daire No</label>
-                        <input type="number" id="filterDaireNo" placeholder="Daire No" min="1" max="12"
+                        <input type="number" id="filterDaireNo" placeholder="Daire No" min="1" max="14"
                             onchange="filterDaireTable()">
                     </div>
                 </div>
@@ -1094,7 +1358,6 @@
 
             <div class="section-header">
                 <h2>Genel Durum</h2>
-                <button class="export-btn" onclick="exportRaporToExcel()">📊 Tam Rapor Excel'e Aktar</button>
             </div>
 
             <div class="summary-cards">
@@ -1186,13 +1449,12 @@
 
             <div class="section-header">
                 <h2>Makbuz Arşivi</h2>
-                <button class="export-btn" onclick="downloadAllReceipts()">📦 Tümünü İndir</button>
             </div>
 
             <h3 style="font-size: 18px; margin-bottom: 15px;">Yeni Makbuz Ekle</h3>
 
             <form onsubmit="saveMakbuzWithDetails(event)" style="margin-bottom: 30px;">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
                     <div class="form-group">
                         <label>Makbuz Türü:</label>
                         <select id="makbuzTur" required onchange="toggleMakbuzAciklama()">
@@ -1253,19 +1515,17 @@
 
                 <div class="form-group">
                     <label>Makbuz Dosyası:</label>
-                    <input type="file" id="makbuzDosya" accept="image/*,.pdf" required style="padding: 10px;">
+                    <div class="file-upload-wrapper">
+                        <button type="button" class="file-upload-btn"
+                            onclick="document.getElementById('makbuzDosya').click()">Dosya Seç</button>
+                        <span id="makbuzDosyaName" class="file-name-display">Dosya seçilmedi</span>
+                        <input type="file" id="makbuzDosya" accept="image/*,.pdf" required style="display: none;"
+                            onchange="document.getElementById('makbuzDosyaName').textContent = this.files[0]?.name || 'Dosya seçilmedi'">
+                    </div>
                 </div>
 
                 <button type="submit" class="submit-btn">Makbuz Ekle</button>
             </form>
-
-            <div class="upload-area" id="uploadArea" onclick="document.getElementById('receiptFile').click()">
-                <div class="upload-icon">📤</div>
-                <p style="font-size: 16px; font-weight: 600; margin-bottom: 5px;">Hızlı Yükleme</p>
-                <p style="font-size: 14px; color: #666;">Dosyaları sürükleyip bırakın (detay sonra eklenebilir)</p>
-                <input type="file" id="receiptFile" accept="image/*,.pdf" multiple style="display: none;"
-                    onchange="uploadReceipts(event)">
-            </div>
 
             <div class="filters">
                 <h3>🔍 Filtreleme</h3>
@@ -1339,6 +1599,7 @@
         // Veri saklama - EN BAŞTA TANIMLANMALI
         let aidatlar = JSON.parse(localStorage.getItem('aidatlar') || '[]');
         let giderler = JSON.parse(localStorage.getItem('giderler') || '[]');
+        let gelirler = JSON.parse(localStorage.getItem('gelirler') || '[]');
         let daireler = JSON.parse(localStorage.getItem('daireler') || '[]');
         let makbuzlar = JSON.parse(localStorage.getItem('makbuzlar') || '[]');
 
@@ -1441,9 +1702,9 @@
                 initializeDaireler();
                 updateAllTables();
                 updateRaporlar();
+                updateRaporlar();
                 populateYearFilters();
                 filterMakbuzlar();
-                setupDragAndDrop();
 
                 autoSyncToCloud().then(() => {
                     startFirebaseListeners();
@@ -1472,6 +1733,7 @@
             const allData = {
                 aidatlar: aidatlar,
                 giderler: giderler,
+                gelirler: gelirler,
                 daireler: daireler,
                 makbuzlar: makbuzlar,
                 password: validPassword,
@@ -1506,6 +1768,7 @@
                     if (confirm('Tüm mevcut veriler silinecek ve yedek dosyası yüklenecek. Emin misiniz?')) {
                         aidatlar = data.aidatlar || [];
                         giderler = data.giderler || [];
+                        gelirler = data.gelirler || [];
                         daireler = data.daireler || [];
                         makbuzlar = data.makbuzlar || [];
 
@@ -1516,6 +1779,7 @@
 
                         localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
                         localStorage.setItem('giderler', JSON.stringify(giderler));
+                        localStorage.setItem('gelirler', JSON.stringify(gelirler));
                         localStorage.setItem('daireler', JSON.stringify(daireler));
                         localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
 
@@ -1552,6 +1816,10 @@
                 }
                 if (giderler.length > 0) {
                     giderler.forEach(g => batch.set(db.collection("giderler").doc(g.id.toString()), g));
+                    hasData = true;
+                }
+                if (gelirler.length > 0) {
+                    gelirler.forEach(g => batch.set(db.collection("gelirler").doc(g.id.toString()), g));
                     hasData = true;
                 }
                 if (daireler.length > 0) {
@@ -1627,14 +1895,49 @@
 
             // Login ekranında daire listesi gibi temel veriler gerekirse diye:
             initializeDaireler();
+            populateAidatYearList();
+
+            // Bugünün tarihini varsayılan yap
+            const today = new Date().toISOString().split('T')[0];
+            const dates = ['aidatTarih', 'giderTarih', 'gelirTarih', 'makbuzTarih'];
+            dates.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = today;
+            });
+
+            // Flatpickr'ı tüm tarih alanları için Türkçe ve gg/aa/yyyy formatında başlat
+            flatpickr('input[type="date"]', {
+                locale: "tr",
+                altInput: true,
+                altFormat: "d/m/Y", // gg/aa/yyyy formatı
+                dateFormat: "Y-m-d", // Veritabanı formatı
+                allowInput: true,
+                disableMobile: true // Mobil cihazlarda kendi takvimini değil flatpickr'ı kullanması için
+            });
         };
+
+        // Aidat Kayıt Yıl Listesini Doldur (2025-2050)
+        function populateAidatYearList() {
+            const select = document.getElementById('aidatYil');
+            if (!select) return;
+
+            const currentYear = new Date().getFullYear();
+            select.innerHTML = '';
+            for (let year = 2025; year <= 2050; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                if (year === currentYear) option.selected = true;
+                select.appendChild(option);
+            }
+        }
 
         // Daireleri başlat
         function initializeDaireler() {
             if (daireler.length === 0) {
                 const bloklar = ['A', 'B', 'C'];
                 bloklar.forEach(blok => {
-                    for (let i = 1; i <= 12; i++) {
+                    for (let i = 1; i <= 14; i++) {
                         daireler.push({
                             blok: blok,
                             no: i,
@@ -1644,35 +1947,6 @@
                     }
                 });
 
-                // A Blok - Dükkan 1 ve 2
-                daireler.push({
-                    blok: 'A',
-                    no: 'Dükkan 1',
-                    evSahibi: '',
-                    telefon: ''
-                });
-                daireler.push({
-                    blok: 'A',
-                    no: 'Dükkan 2',
-                    evSahibi: '',
-                    telefon: ''
-                });
-
-                // B Blok - Kapıcı Dairesi
-                daireler.push({
-                    blok: 'B',
-                    no: 'Kapıcı Dairesi',
-                    evSahibi: '',
-                    telefon: ''
-                });
-
-                // C Blok - Dükkan 3
-                daireler.push({
-                    blok: 'C',
-                    no: 'Dükkan 3',
-                    evSahibi: '',
-                    telefon: ''
-                });
 
                 localStorage.setItem('daireler', JSON.stringify(daireler));
             }
@@ -1687,6 +1961,10 @@
             updateDaireSelect('daireNo', this.value);
         });
 
+        document.getElementById('gelirBlok')?.addEventListener('change', function () {
+            updateDaireSelect('gelirDaire', this.value);
+        });
+
         function updateDaireSelect(selectId, blok) {
             const select = document.getElementById(selectId);
             if (!select) return;
@@ -1694,33 +1972,104 @@
             select.innerHTML = '<option value="">Daire Seçin</option>';
 
             if (blok) {
-                // Normal daireler
-                for (let i = 1; i <= 12; i++) {
+                // Her blok için 1-14 arası daireler
+                for (let i = 1; i <= 14; i++) {
                     const option = document.createElement('option');
                     option.value = i;
                     option.textContent = i;
                     select.appendChild(option);
                 }
+            }
+        }
 
-                // Özel daireler
-                if (blok === 'A') {
-                    ['Dükkan 1', 'Dükkan 2'].forEach(d => {
+        // Yeni Gider Türü Ekleme
+        function addNewGiderTur() {
+            const yeniTur = prompt("Yeni gider türü ismini girin:");
+            if (yeniTur && yeniTur.trim() !== "") {
+                const tur = yeniTur.trim();
+                const selects = ['giderTur', 'filterGiderTur'];
+                selects.forEach(id => {
+                    const select = document.getElementById(id);
+                    if (select) {
                         const option = document.createElement('option');
-                        option.value = d;
-                        option.textContent = d;
-                        select.appendChild(option);
-                    });
-                } else if (blok === 'B') {
-                    const option = document.createElement('option');
-                    option.value = 'Kapıcı Dairesi';
-                    option.textContent = 'Kapıcı Dairesi';
-                    select.appendChild(option);
-                } else if (blok === 'C') {
-                    const option = document.createElement('option');
-                    option.value = 'Dükkan 3';
-                    option.textContent = 'Dükkan 3';
-                    select.appendChild(option);
-                }
+                        option.value = tur;
+                        option.textContent = tur;
+                        // "Diğer"in bir üstüne ekle (eğer varsa), yoksa sona ekle
+                        if (select.lastElementChild && select.lastElementChild.value === "Diğer") {
+                            select.insertBefore(option, select.lastElementChild);
+                        } else {
+                            select.appendChild(option);
+                        }
+                    }
+                });
+                document.getElementById('giderTur').value = tur;
+                alert("Yeni gider türü eklendi: " + tur);
+            }
+        }
+
+        function removeGiderTur() {
+            const select = document.getElementById('giderTur');
+            const val = select.value;
+            if (!val) { alert("Lütfen çıkarmak istediğiniz türü seçin!"); return; }
+            if (val === "Diğer") { alert("Bu varsayılan türü çıkaramazsınız!"); return; }
+
+            if (confirm(`'${val}' gider türünü listeden çıkarmak istediğinize emin misiniz?`)) {
+                const selects = ['giderTur', 'filterGiderTur'];
+                selects.forEach(id => {
+                    const s = document.getElementById(id);
+                    if (s) {
+                        for (let i = 0; i < s.options.length; i++) {
+                            if (s.options[i].value === val) { s.remove(i); break; }
+                        }
+                    }
+                });
+                select.value = "";
+                alert("Gider türü çıkarıldı.");
+            }
+        }
+
+        // Yeni Gelir Türü Ekleme
+        function addNewGelirTur() {
+            const yeniTur = prompt("Yeni gelir türü ismini girin:");
+            if (yeniTur && yeniTur.trim() !== "") {
+                const tur = yeniTur.trim();
+                const selects = ['gelirTur', 'filterGelirTur'];
+                selects.forEach(id => {
+                    const select = document.getElementById(id);
+                    if (select) {
+                        const option = document.createElement('option');
+                        option.value = tur;
+                        option.textContent = tur;
+                        if (select.lastElementChild && select.lastElementChild.value === "Diğer") {
+                            select.insertBefore(option, select.lastElementChild);
+                        } else {
+                            select.appendChild(option);
+                        }
+                    }
+                });
+                document.getElementById('gelirTur').value = tur;
+                alert("Yeni gelir türü eklendi: " + tur);
+            }
+        }
+
+        function removeGelirTur() {
+            const select = document.getElementById('gelirTur');
+            const val = select.value;
+            if (!val) { alert("Lütfen çıkarmak istediğiniz türü seçin!"); return; }
+            if (val === "Diğer") { alert("Bu varsayılan türü çıkaramazsınız!"); return; }
+
+            if (confirm(`'${val}' gelir türünü listeden çıkarmak istediğinize emin misiniz?`)) {
+                const selects = ['gelirTur', 'filterGelirTur'];
+                selects.forEach(id => {
+                    const s = document.getElementById(id);
+                    if (s) {
+                        for (let i = 0; i < s.options.length; i++) {
+                            if (s.options[i].value === val) { s.remove(i); break; }
+                        }
+                    }
+                });
+                select.value = "";
+                alert("Gelir türü çıkarıldı.");
             }
         }
 
@@ -1728,6 +2077,14 @@
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
+
+            // Sekmeleri güncelle
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('onclick')?.includes(`'${sectionId}'`)) {
+                    tab.classList.add('active');
+                }
+            });
 
             if (sectionId === 'rapor') {
                 updateRaporlar();
@@ -1744,14 +2101,19 @@
                 blok: document.getElementById('aidatBlok').value,
                 daire: document.getElementById('aidatDaire').value,
                 ay: document.getElementById('aidatAy').value,
+                yil: document.getElementById('aidatYil').value,
                 tutar: parseFloat(document.getElementById('aidatTutar').value)
             };
 
             aidatlar.push(aidat);
             localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
 
+            // Firebase'e kaydet
+            db.collection("aidatlar").doc(aidat.id.toString()).set(aidat);
+
             showSuccessMessage('aidatSuccess');
             event.target.reset();
+            populateAidatYearList();
             filterAidatTable();
             populateYearFilters();
         }
@@ -1771,8 +2133,44 @@
             giderler.push(gider);
             localStorage.setItem('giderler', JSON.stringify(giderler));
 
+            // Firebase'e kaydet
+            db.collection("giderler").doc(gider.id.toString()).set(gider);
+
+            // Makbuz varsa kaydet
+            const makbuzFile = document.getElementById('giderMakbuz')?.files[0];
+            if (makbuzFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const makbuz = {
+                        id: Date.now() + Math.random(),
+                        isim: makbuzFile.name,
+                        tur: 'Gider',
+                        tip: makbuzFile.type.startsWith('image/') ? 'image' : 'pdf',
+                        data: e.target.result,
+                        tarih: gider.tarih,
+                        boyut: makbuzFile.size,
+                        blok: '',
+                        daire: '',
+                        tutar: gider.tutar,
+                        giderTuru: gider.tur,
+                        aciklama: gider.aciklama || gider.tur
+                    };
+                    makbuzlar.push(makbuz);
+                    localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
+
+                    // Firebase'e kaydet (1MB altındaysa)
+                    if (JSON.stringify(makbuz).length < 1000000) {
+                        db.collection("makbuzlar").doc(makbuz.id.toString()).set(makbuz);
+                    }
+                    populateYearFilters();
+                    filterMakbuzlar();
+                };
+                reader.readAsDataURL(makbuzFile);
+            }
+
             showSuccessMessage('giderSuccess');
             event.target.reset();
+            document.getElementById('giderMakbuzName').textContent = 'Dosya seçilmedi';
             filterGiderTable();
             populateYearFilters();
         }
@@ -1782,15 +2180,18 @@
             event.preventDefault();
 
             const blok = document.getElementById('daireBlok').value;
-            const no = parseInt(document.getElementById('daireNo').value);
+            const no = document.getElementById('daireNo').value;
             const evSahibi = document.getElementById('daireEvSahibi').value;
             const telefon = document.getElementById('daireTelefon').value;
 
-            const index = daireler.findIndex(d => d.blok === blok && d.no === no);
+            const index = daireler.findIndex(d => d.blok === blok && d.no == no);
             if (index !== -1) {
                 daireler[index].evSahibi = evSahibi;
                 daireler[index].telefon = telefon;
                 localStorage.setItem('daireler', JSON.stringify(daireler));
+
+                // Firebase'e kaydet
+                db.collection("daireler").doc(`${blok}_${no}`).set(daireler[index]);
 
                 showSuccessMessage('daireSuccess');
                 event.target.reset();
@@ -1801,8 +2202,398 @@
         // Başarı mesajı göster
         function showSuccessMessage(id) {
             const msg = document.getElementById(id);
+            if (!msg) return;
             msg.classList.add('show');
             setTimeout(() => msg.classList.remove('show'), 3000);
+        }
+
+        // Aidat filtreleme
+        function filterAidatTable() {
+            const yilFilter = document.getElementById('filterAidatYil')?.value;
+            const blokFilter = document.getElementById('filterAidatBlok')?.value;
+            const ayFilter = document.getElementById('filterAidatAy')?.value;
+            const daireFilter = document.getElementById('filterAidatDaire')?.value;
+
+            let filtered = aidatlar;
+
+            if (yilFilter) {
+                filtered = filtered.filter(a => {
+                    const year = new Date(a.tarih).getFullYear();
+                    return year == yilFilter;
+                });
+            }
+            if (blokFilter) {
+                filtered = filtered.filter(a => a.blok === blokFilter);
+            }
+            if (ayFilter) {
+                filtered = filtered.filter(a => a.ay === ayFilter);
+            }
+            if (daireFilter) {
+                filtered = filtered.filter(a => a.daire == daireFilter);
+            }
+
+            updateAidatTable(filtered);
+        }
+
+        // Gider filtreleme
+        function filterGiderTable() {
+            const yilFilter = document.getElementById('filterGiderYil')?.value;
+            const turFilter = document.getElementById('filterGiderTur')?.value;
+            const baslangic = document.getElementById('filterGiderBaslangic')?.value;
+            const bitis = document.getElementById('filterGiderBitis')?.value;
+
+            let filtered = giderler;
+
+            if (yilFilter) {
+                filtered = filtered.filter(g => {
+                    const year = new Date(g.tarih).getFullYear();
+                    return year == yilFilter;
+                });
+            }
+            if (turFilter) {
+                filtered = filtered.filter(g => g.tur === turFilter);
+            }
+            if (baslangic) {
+                filtered = filtered.filter(g => g.tarih >= baslangic);
+            }
+            if (bitis) {
+                filtered = filtered.filter(g => g.tarih <= bitis);
+            }
+
+            updateGiderTable(filtered);
+        }
+
+        // Gelir filtreleme
+        function filterGelirTable() {
+            const yilFilter = document.getElementById('filterGelirYil')?.value;
+            const turFilter = document.getElementById('filterGelirTur')?.value;
+            const blokFilter = document.getElementById('filterGelirBlok')?.value;
+            const daireFilter = document.getElementById('filterGelirDaire')?.value;
+            const baslangic = document.getElementById('filterGelirBaslangic')?.value;
+            const bitis = document.getElementById('filterGelirBitis')?.value;
+
+            let filtered = gelirler;
+
+            if (yilFilter) {
+                filtered = filtered.filter(g => {
+                    const year = new Date(g.tarih).getFullYear();
+                    return year == yilFilter;
+                });
+            }
+            if (turFilter) {
+                filtered = filtered.filter(g => g.tur === turFilter);
+            }
+            if (blokFilter) {
+                filtered = filtered.filter(g => g.blok === blokFilter);
+            }
+            if (daireFilter) {
+                filtered = filtered.filter(g => g.daire == daireFilter);
+            }
+            if (baslangic) {
+                filtered = filtered.filter(g => g.tarih >= baslangic);
+            }
+            if (bitis) {
+                filtered = filtered.filter(g => g.tarih <= bitis);
+            }
+
+            updateGelirTable(filtered);
+        }
+
+        function filterDaireTable() {
+            const blokFilter = document.getElementById('filterDaireBlok')?.value;
+            const daireFilter = document.getElementById('filterDaireNo')?.value;
+
+            let filtered = daireler;
+
+            if (blokFilter) {
+                filtered = filtered.filter(d => d.blok === blokFilter);
+            }
+            if (daireFilter) {
+                filtered = filtered.filter(d => d.no == daireFilter);
+            }
+
+            filtered.sort((a, b) => {
+                if (a.blok !== b.blok) return a.blok.localeCompare(b.blok);
+                return String(a.no).localeCompare(String(b.no), undefined, { numeric: true });
+            });
+
+            updateDaireTable(filtered);
+        }
+
+        // Tabloları güncelle
+        function updateAidatTable(data = aidatlar) {
+            const tbody = document.getElementById('aidatTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-data">Henüz aidat kaydı yok</td></tr>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(aidat => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${new Date(aidat.tarih).toLocaleDateString('tr-TR')}</td>
+                    <td>${aidat.blok} Blok</td>
+                    <td>${aidat.daire}</td>
+                    <td>${aidat.ay}${aidat.yil ? ' / ' + aidat.yil : ''}</td>
+                    <td>${aidat.tutar.toFixed(2)} ₺</td>
+                    <td><button class="delete-btn" onclick="deleteAidat(${aidat.id})">Sil</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateGiderTable(data = giderler) {
+            const tbody = document.getElementById('giderTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="no-data">Henüz gider kaydı yok</td></tr>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(gider => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${new Date(gider.tarih).toLocaleDateString('tr-TR')}</td>
+                    <td>${gider.tur}</td>
+                    <td>${gider.aciklama || '-'}</td>
+                    <td>${gider.tutar.toFixed(2)} ₺</td>
+                    <td><button class="delete-btn" onclick="deleteGider(${gider.id})">Sil</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateGelirTable(data = gelirler) {
+            const tbody = document.getElementById('gelirTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data">Henüz gelir kaydı yok</td></tr>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(gelir => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${new Date(gelir.tarih).toLocaleDateString('tr-TR')}</td>
+                    <td>${gelir.blok} Blok</td>
+                    <td>${gelir.daire}</td>
+                    <td>${gelir.tur}</td>
+                    <td>${gelir.aciklama || '-'}</td>
+                    <td>${gelir.tutar.toFixed(2)} ₺</td>
+                    <td><button class="delete-btn" onclick="deleteGelir(${gelir.id})">Sil</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateDaireTable(data = daireler) {
+            const tbody = document.getElementById('daireTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            data.forEach(daire => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${daire.blok} Blok</td>
+                    <td>${daire.no}</td>
+                    <td>${daire.evSahibi || '-'}</td>
+                    <td>${daire.telefon || '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateAllTables() {
+            filterAidatTable();
+            filterGiderTable();
+            filterGelirTable();
+            filterDaireTable();
+        }
+
+        // Silme işlemleri
+        function deleteAidat(id) {
+            if (confirm('Bu ödemeyi silmek istediğinizden emin misiniz?')) {
+                aidatlar = aidatlar.filter(a => a.id !== id);
+                localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
+                db.collection("aidatlar").doc(id.toString()).delete();
+                filterAidatTable();
+                updateRaporlar();
+            }
+        }
+
+        function deleteGider(id) {
+            if (confirm('Bu gideri silmek istediğinizden emin misiniz?')) {
+                giderler = giderler.filter(g => g.id !== id);
+                localStorage.setItem('giderler', JSON.stringify(giderler));
+                db.collection("giderler").doc(id.toString()).delete();
+                filterGiderTable();
+                updateRaporlar();
+            }
+        }
+
+        function deleteGelir(id) {
+            if (confirm('Bu geliri silmek istediğinizden emin misiniz?')) {
+                gelirler = gelirler.filter(g => g.id !== id);
+                localStorage.setItem('gelirler', JSON.stringify(gelirler));
+                db.collection("gelirler").doc(id.toString()).delete();
+                filterGelirTable();
+                updateRaporlar();
+            }
+        }
+
+        // Raporları güncelle
+        function updateRaporlar() {
+            const yilFilter = document.getElementById('filterRaporYil')?.value;
+            const ayFilter = document.getElementById('filterRaporAy')?.value;
+            const blokFilter = document.getElementById('filterRaporBlok')?.value;
+
+            let filteredAidatlar = aidatlar;
+            let filteredGiderler = giderler;
+            let filteredGelirler = gelirler;
+
+            if (yilFilter) {
+                const y = parseInt(yilFilter);
+                filteredAidatlar = filteredAidatlar.filter(a => new Date(a.tarih).getFullYear() === y);
+                filteredGiderler = filteredGiderler.filter(g => new Date(g.tarih).getFullYear() === y);
+                filteredGelirler = filteredGelirler.filter(g => new Date(g.tarih).getFullYear() === y);
+            }
+
+            if (ayFilter) {
+                filteredAidatlar = filteredAidatlar.filter(a => a.ay === ayFilter);
+                const aylar = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+                const ayIndex = aylar.indexOf(ayFilter);
+                if (ayIndex !== -1) {
+                    filteredGiderler = filteredGiderler.filter(g => new Date(g.tarih).getMonth() === ayIndex);
+                    filteredGelirler = filteredGelirler.filter(g => new Date(g.tarih).getMonth() === ayIndex);
+                }
+            }
+
+            if (blokFilter) {
+                filteredAidatlar = filteredAidatlar.filter(a => a.blok === blokFilter);
+            }
+
+            const toplamAidat = filteredAidatlar.reduce((sum, a) => sum + a.tutar, 0);
+            const toplamGenelGelir = filteredGelirler.reduce((sum, g) => sum + g.tutar, 0);
+            const toplamGelir = toplamAidat + toplamGenelGelir;
+            const toplamGider = filteredGiderler.reduce((sum, g) => sum + g.tutar, 0);
+            const kasa = toplamGelir - toplamGider;
+
+            document.getElementById('toplamAidat').textContent = toplamGelir.toFixed(2) + ' ₺';
+            document.getElementById('toplamGider').textContent = toplamGider.toFixed(2) + ' ₺';
+            document.getElementById('kasaDurum').textContent = kasa.toFixed(2) + ' ₺';
+
+            // Gider dağılımı
+            const giderDagilim = {};
+            filteredGiderler.forEach(g => { giderDagilim[g.tur] = (giderDagilim[g.tur] || 0) + g.tutar; });
+            const tbody = document.getElementById('giderDagılımBody');
+            if (tbody) {
+                tbody.innerHTML = Object.keys(giderDagilim).length === 0 ? '<tr><td colspan="2" class="no-data">Gider kaydı yok</td></tr>' :
+                    Object.entries(giderDagilim).sort((a, b) => b[1] - a[1]).map(([tur, tutar]) => `<tr><td>${tur}</td><td>${tutar.toFixed(2)} ₺</td></tr>`).join('');
+            }
+
+            // Blok bazında aidat özeti
+            const blokAidat = {};
+            filteredAidatlar.forEach(a => {
+                if (!blokAidat[a.blok]) blokAidat[a.blok] = { toplam: 0, adet: 0 };
+                blokAidat[a.blok].toplam += a.tutar;
+                blokAidat[a.blok].adet++;
+            });
+            const blokBody = document.getElementById('blokAidatBody');
+            if (blokBody) {
+                blokBody.innerHTML = ['A', 'B', 'C'].map(blok => {
+                    const data = blokAidat[blok] || { toplam: 0, adet: 0 };
+                    return `<tr><td>${blok} Blok</td><td>${data.toplam.toFixed(2)} ₺</td><td>${data.adet}</td></tr>`;
+                }).join('');
+            }
+        }
+
+        // Excel export
+        function exportAidatToExcel() {
+            let csv = 'Tarih,Blok,Daire,Ay,Tutar\n';
+            aidatlar.forEach(aidat => { csv += `${new Date(aidat.tarih).toLocaleDateString('tr-TR')},${aidat.blok} Blok,${aidat.daire},${aidat.ay},${aidat.tutar}\n`; });
+            downloadCSV(csv, 'aidatlar.csv');
+        }
+
+        function exportGiderToExcel() {
+            let csv = 'Tarih,Gider Türü,Açıklama,Tutar\n';
+            giderler.forEach(g => { csv += `${new Date(g.tarih).toLocaleDateString('tr-TR')},${g.tur},"${g.aciklama || ''}",${g.tutar}\n`; });
+            downloadCSV(csv, 'giderler.csv');
+        }
+
+        function exportGelirToExcel() {
+            let csv = 'Tarih,Gelir Türü,Açıklama,Tutar\n';
+            gelirler.forEach(g => { csv += `${new Date(g.tarih).toLocaleDateString('tr-TR')},${g.tur},"${g.aciklama || ''}",${g.tutar}\n`; });
+            downloadCSV(csv, 'gelirler.csv');
+        }
+
+        function exportDaireToExcel() {
+            let csv = 'Blok,Daire No,Ev Sahibi,Telefon\n';
+            daireler.forEach(d => { csv += `${d.blok} Blok,${d.no},${d.evSahibi || ''},${d.telefon || ''}\n`; });
+            downloadCSV(csv, 'daireler.csv');
+        }
+
+        function downloadCSV(content, filename) {
+            const BOM = '\uFEFF';
+            const blob = new Blob([BOM + content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('download', filename);
+            link.click();
+        }
+
+        // Gelir kaydet
+        function saveGelir(event) {
+            event.preventDefault();
+            const gelir = {
+                id: Date.now(),
+                tarih: document.getElementById('gelirTarih').value,
+                blok: document.getElementById('gelirBlok').value,
+                daire: document.getElementById('gelirDaire').value,
+                tur: document.getElementById('gelirTur').value,
+                aciklama: document.getElementById('gelirAciklama').value,
+                tutar: parseFloat(document.getElementById('gelirTutar').value)
+            };
+            gelirler.push(gelir);
+            localStorage.setItem('gelirler', JSON.stringify(gelirler));
+            db.collection("gelirler").doc(gelir.id.toString()).set(gelir);
+            const makbuzFile = document.getElementById('gelirMakbuz')?.files[0];
+            if (makbuzFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const makbuz = {
+                        id: Date.now() + Math.random(),
+                        isim: makbuzFile.name,
+                        tur: 'Gelir',
+                        tip: makbuzFile.type.startsWith('image/') ? 'image' : 'pdf',
+                        data: e.target.result,
+                        tarih: gelir.tarih,
+                        boyut: makbuzFile.size,
+                        blok: gelir.blok,
+                        daire: gelir.daire,
+                        tutar: gelir.tutar,
+                        aciklama: gelir.aciklama || gelir.tur
+                    };
+                    makbuzlar.push(makbuz);
+                    localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
+                    if (JSON.stringify(makbuz).length < 1000000) db.collection("makbuzlar").doc(makbuz.id.toString()).set(makbuz);
+                    filterMakbuzlar();
+                    populateYearFilters();
+                };
+                reader.readAsDataURL(makbuzFile);
+            }
+            showSuccessMessage('gelirSuccess');
+            event.target.reset();
+            document.getElementById('gelirMakbuzName').textContent = 'Dosya seçilmedi';
+            document.getElementById('gelirDaire').innerHTML = '<option value="">Önce Blok Seçin</option>';
+            filterGelirTable();
+            populateYearFilters();
         }
 
         // Yıl filtrelerini doldur
@@ -1815,6 +2606,11 @@
             });
 
             giderler.forEach(g => {
+                const year = new Date(g.tarih).getFullYear();
+                years.add(year);
+            });
+
+            gelirler.forEach(g => {
                 const year = new Date(g.tarih).getFullYear();
                 years.add(year);
             });
@@ -1854,6 +2650,20 @@
                 giderYilSelect.value = currentValue;
             }
 
+            // Gelir yıl filtresi
+            const gelirYilSelect = document.getElementById('filterGelirYil');
+            if (gelirYilSelect) {
+                const currentValue = gelirYilSelect.value;
+                gelirYilSelect.innerHTML = '<option value="">Tümü</option>';
+                sortedYears.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    gelirYilSelect.appendChild(option);
+                });
+                gelirYilSelect.value = currentValue;
+            }
+
             // Rapor yıl filtresi
             const raporYilSelect = document.getElementById('filterRaporYil');
             if (raporYilSelect) {
@@ -1884,27 +2694,6 @@
         }
 
         // Makbuz fonksiyonları
-        function setupDragAndDrop() {
-            const uploadArea = document.getElementById('uploadArea');
-            if (!uploadArea) return;
-
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('dragover');
-            });
-
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                handleReceiptFiles(files);
-            });
-        }
-
         function uploadReceipts(event) {
             const files = event.target.files;
             handleReceiptFiles(files);
@@ -2173,674 +2962,6 @@
             reader.readAsDataURL(dosya);
         }
 
-        // Daireleri başlat
-        function initializeDaireler() {
-            if (daireler.length === 0) {
-                const bloklar = ['A', 'B', 'C'];
-                bloklar.forEach(blok => {
-                    for (let i = 1; i <= 12; i++) {
-                        daireler.push({
-                            blok: blok,
-                            no: i,
-                            evSahibi: '',
-                            telefon: ''
-                        });
-                    }
-                });
-
-                // A Blok - Dükkan 1 ve 2
-                daireler.push({
-                    blok: 'A',
-                    no: 'Dükkan 1',
-                    evSahibi: '',
-                    telefon: ''
-                });
-                daireler.push({
-                    blok: 'A',
-                    no: 'Dükkan 2',
-                    evSahibi: '',
-                    telefon: ''
-                });
-
-                // B Blok - Kapıcı Dairesi
-                daireler.push({
-                    blok: 'B',
-                    no: 'Kapıcı Dairesi',
-                    evSahibi: '',
-                    telefon: ''
-                });
-
-                // C Blok - Dükkan 3
-                daireler.push({
-                    blok: 'C',
-                    no: 'Dükkan 3',
-                    evSahibi: '',
-                    telefon: ''
-                });
-
-                localStorage.setItem('daireler', JSON.stringify(daireler));
-            }
-        }
-
-        // Blok seçildiğinde daire listesini güncelle
-        document.addEventListener('DOMContentLoaded', function () {
-            const aidatBlok = document.getElementById('aidatBlok');
-            if (aidatBlok) {
-                aidatBlok.addEventListener('change', function () {
-                    updateDaireSelect('aidatDaire', this.value);
-                });
-            }
-
-            const daireBlok = document.getElementById('daireBlok');
-            if (daireBlok) {
-                daireBlok.addEventListener('change', function () {
-                    updateDaireSelect('daireNo', this.value);
-                });
-            }
-        });
-
-        // Bölüm göster
-        function showSection(sectionId) {
-            // Seksiyonları değiştir
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            const section = document.getElementById(sectionId);
-            if (section) section.classList.add('active');
-
-            // Sekmeleri güncelle
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.getAttribute('onclick').includes(`'${sectionId}'`)) {
-                    tab.classList.add('active');
-                }
-            });
-
-            if (sectionId === 'rapor') {
-                updateRaporlar();
-            }
-        }
-
-        // Aidat kaydet
-        function saveAidat(event) {
-            event.preventDefault();
-
-            const aidat = {
-                id: Date.now(),
-                tarih: document.getElementById('aidatTarih').value,
-                blok: document.getElementById('aidatBlok').value,
-                daire: document.getElementById('aidatDaire').value,
-                ay: document.getElementById('aidatAy').value,
-                tutar: parseFloat(document.getElementById('aidatTutar').value)
-            };
-
-            aidatlar.push(aidat);
-            localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
-
-            showSuccessMessage('aidatSuccess');
-            event.target.reset();
-            filterAidatTable();
-            populateYearFilters();
-        }
-
-        // Gider kaydet
-        function saveGider(event) {
-            event.preventDefault();
-
-            const gider = {
-                id: Date.now(),
-                tarih: document.getElementById('giderTarih').value,
-                tur: document.getElementById('giderTur').value,
-                aciklama: document.getElementById('giderAciklama').value,
-                tutar: parseFloat(document.getElementById('giderTutar').value)
-            };
-
-            giderler.push(gider);
-            localStorage.setItem('giderler', JSON.stringify(giderler));
-
-            showSuccessMessage('giderSuccess');
-            event.target.reset();
-            filterGiderTable();
-            populateYearFilters();
-        }
-
-        // Daire kaydet
-        function saveDaire(event) {
-            event.preventDefault();
-
-            const blok = document.getElementById('daireBlok').value;
-            const no = parseInt(document.getElementById('daireNo').value);
-            const evSahibi = document.getElementById('daireEvSahibi').value;
-            const telefon = document.getElementById('daireTelefon').value;
-
-            const index = daireler.findIndex(d => d.blok === blok && d.no === no);
-            if (index !== -1) {
-                daireler[index].evSahibi = evSahibi;
-                daireler[index].telefon = telefon;
-                localStorage.setItem('daireler', JSON.stringify(daireler));
-
-                // Firebase'e kaydet
-                db.collection("daireler").doc(`${blok}_${no}`).set(daireler[index]);
-
-                showSuccessMessage('daireSuccess');
-                event.target.reset();
-                filterDaireTable();
-            }
-        }
-
-        // Başarı mesajı göster
-        function showSuccessMessage(id) {
-            const msg = document.getElementById(id);
-            if (!msg) return;
-            msg.classList.add('show');
-            setTimeout(() => msg.classList.remove('show'), 3000);
-        }
-
-        // Aidat filtreleme - YIL DESTEĞİ İLE
-        function filterAidatTable() {
-            const yilFilter = document.getElementById('filterAidatYil')?.value;
-            const blokFilter = document.getElementById('filterAidatBlok')?.value;
-            const ayFilter = document.getElementById('filterAidatAy')?.value;
-            const daireFilter = document.getElementById('filterAidatDaire')?.value;
-
-            let filtered = aidatlar;
-
-            if (yilFilter) {
-                filtered = filtered.filter(a => {
-                    const year = new Date(a.tarih).getFullYear();
-                    return year == yilFilter;
-                });
-            }
-            if (blokFilter) {
-                filtered = filtered.filter(a => a.blok === blokFilter);
-            }
-            if (ayFilter) {
-                filtered = filtered.filter(a => a.ay === ayFilter);
-            }
-            if (daireFilter) {
-                filtered = filtered.filter(a => a.daire == daireFilter);
-            }
-
-            updateAidatTable(filtered);
-        }
-
-        // Gider filtreleme - YIL DESTEĞİ İLE
-        function filterGiderTable() {
-            const yilFilter = document.getElementById('filterGiderYil')?.value;
-            const turFilter = document.getElementById('filterGiderTur')?.value;
-            const baslangic = document.getElementById('filterGiderBaslangic')?.value;
-            const bitis = document.getElementById('filterGiderBitis')?.value;
-
-            let filtered = giderler;
-
-            if (yilFilter) {
-                filtered = filtered.filter(g => {
-                    const year = new Date(g.tarih).getFullYear();
-                    return year == yilFilter;
-                });
-            }
-            if (turFilter) {
-                filtered = filtered.filter(g => g.tur === turFilter);
-            }
-            if (baslangic) {
-                filtered = filtered.filter(g => g.tarih >= baslangic);
-            }
-            if (bitis) {
-                filtered = filtered.filter(g => g.tarih <= bitis);
-            }
-
-            updateGiderTable(filtered);
-        }
-
-        function filterDaireTable() {
-            const blokFilter = document.getElementById('filterDaireBlok')?.value;
-            const daireFilter = document.getElementById('filterDaireNo')?.value;
-
-            let filtered = daireler;
-
-            if (blokFilter) {
-                filtered = filtered.filter(d => d.blok === blokFilter);
-            }
-            if (daireFilter) {
-                filtered = filtered.filter(d => d.no == daireFilter);
-            }
-
-            // Bloğa ve Daire No'ya göre sırala (Numerik sıralama desteği ile)
-            filtered.sort((a, b) => {
-                if (a.blok !== b.blok) {
-                    return a.blok.localeCompare(b.blok);
-                }
-                return String(a.no).localeCompare(String(b.no), undefined, { numeric: true });
-            });
-
-            updateDaireTable(filtered);
-        }
-
-        // Tabloları güncelle
-        function updateAidatTable(data = aidatlar) {
-            const tbody = document.getElementById('aidatTableBody');
-            tbody.innerHTML = '';
-
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="no-data">Henüz aidat kaydı yok</td></tr>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(aidat => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${new Date(aidat.tarih).toLocaleDateString('tr-TR')}</td>
-                    <td>${aidat.blok} Blok</td>
-                    <td>${aidat.daire}</td>
-                    <td>${aidat.ay}</td>
-                    <td>${aidat.tutar.toFixed(2)} ₺</td>
-                    <td><button class="delete-btn" onclick="deleteAidat(${aidat.id})">Sil</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function updateGiderTable(data = giderler) {
-            const tbody = document.getElementById('giderTableBody');
-            tbody.innerHTML = '';
-
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="no-data">Henüz gider kaydı yok</td></tr>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(gider => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${new Date(gider.tarih).toLocaleDateString('tr-TR')}</td>
-                    <td>${gider.tur}</td>
-                    <td>${gider.aciklama || '-'}</td>
-                    <td>${gider.tutar.toFixed(2)} ₺</td>
-                    <td><button class="delete-btn" onclick="deleteGider(${gider.id})">Sil</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function updateDaireTable(data = daireler) {
-            const tbody = document.getElementById('daireTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            data.forEach(daire => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${daire.blok} Blok</td>
-                    <td>${daire.no}</td>
-                    <td>${daire.evSahibi || '-'}</td>
-                    <td>${daire.telefon || '-'}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function updateAllTables() {
-            filterAidatTable();
-            filterGiderTable();
-            filterDaireTable();
-        }
-
-        // Silme işlemleri
-        function deleteAidat(id) {
-            if (confirm('Bu ödemeyi silmek istediğinizden emin misiniz?')) {
-                aidatlar = aidatlar.filter(a => a.id !== id);
-                localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
-
-                // Firebase'den sil
-                db.collection("aidatlar").doc(id.toString()).delete();
-
-                // Makbuz varsa onu da sil
-                const terkaitMakbuz = makbuzlar.find(m => m.iliskiliKayit == id);
-                if (terkaitMakbuz) deleteMakbuz(terkaitMakbuz.id);
-
-                filterAidatTable();
-                updateRaporlar();
-            }
-        }
-
-        function deleteGider(id) {
-            if (confirm('Bu gideri silmek istediğinizden emin misiniz?')) {
-                giderler = giderler.filter(g => g.id !== id);
-                localStorage.setItem('giderler', JSON.stringify(giderler));
-
-                // Firebase'den sil
-                db.collection("giderler").doc(id.toString()).delete();
-
-                filterGiderTable();
-                updateRaporlar();
-            }
-        }
-
-        // Raporları güncelle
-        function updateRaporlar() {
-            const yilFilter = document.getElementById('filterRaporYil')?.value;
-            const ayFilter = document.getElementById('filterRaporAy')?.value;
-            const blokFilter = document.getElementById('filterRaporBlok')?.value;
-
-            let filteredAidatlar = aidatlar;
-            let filteredGiderler = giderler;
-
-            // Yıl filtreleme
-            if (yilFilter) {
-                filteredAidatlar = filteredAidatlar.filter(a => {
-                    const year = new Date(a.tarih).getFullYear();
-                    return year == yilFilter;
-                });
-                filteredGiderler = filteredGiderler.filter(g => {
-                    const year = new Date(g.tarih).getFullYear();
-                    return year == yilFilter;
-                });
-            }
-
-            // Ay filtreleme
-            if (ayFilter) {
-                filteredAidatlar = filteredAidatlar.filter(a => a.ay === ayFilter);
-                // Giderler için ay filtrelemesi (tarih üzerinden)
-                const aylar = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-                    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-                const ayIndex = aylar.indexOf(ayFilter);
-                if (ayIndex !== -1) {
-                    filteredGiderler = filteredGiderler.filter(g => {
-                        const tarih = new Date(g.tarih);
-                        return tarih.getMonth() === ayIndex;
-                    });
-                }
-            }
-
-            // Blok filtreleme
-            if (blokFilter) {
-                filteredAidatlar = filteredAidatlar.filter(a => a.blok === blokFilter);
-            }
-
-            const toplamAidat = filteredAidatlar.reduce((sum, a) => sum + a.tutar, 0);
-            const toplamGider = filteredGiderler.reduce((sum, g) => sum + g.tutar, 0);
-            const kasa = toplamAidat - toplamGider;
-
-            document.getElementById('toplamAidat').textContent = toplamAidat.toFixed(2) + ' ₺';
-            document.getElementById('toplamGider').textContent = toplamGider.toFixed(2) + ' ₺';
-            document.getElementById('kasaDurum').textContent = kasa.toFixed(2) + ' ₺';
-
-            // Gider dağılımı
-            const giderDagilim = {};
-            filteredGiderler.forEach(g => {
-                giderDagilim[g.tur] = (giderDagilim[g.tur] || 0) + g.tutar;
-            });
-
-            const tbody = document.getElementById('giderDagılımBody');
-            tbody.innerHTML = '';
-
-            if (Object.keys(giderDagilim).length === 0) {
-                tbody.innerHTML = '<tr><td colspan="2" class="no-data">Gider kaydı yok</td></tr>';
-            } else {
-                Object.entries(giderDagilim)
-                    .sort((a, b) => b[1] - a[1])
-                    .forEach(([tur, tutar]) => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${tur}</td>
-                            <td>${tutar.toFixed(2)} ₺</td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-            }
-
-            // Blok bazında aidat özeti
-            const blokAidat = {};
-            filteredAidatlar.forEach(a => {
-                if (!blokAidat[a.blok]) {
-                    blokAidat[a.blok] = { toplam: 0, adet: 0 };
-                }
-                blokAidat[a.blok].toplam += a.tutar;
-                blokAidat[a.blok].adet++;
-            });
-
-            const blokBody = document.getElementById('blokAidatBody');
-            blokBody.innerHTML = '';
-
-            ['A', 'B', 'C'].forEach(blok => {
-                const data = blokAidat[blok] || { toplam: 0, adet: 0 };
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${blok} Blok</td>
-                    <td>${data.toplam.toFixed(2)} ₺</td>
-                    <td>${data.adet}</td>
-                `;
-                blokBody.appendChild(tr);
-            });
-        }
-
-        // Excel export fonksiyonları
-        function exportAidatToExcel() {
-            const blokFilter = document.getElementById('filterAidatBlok').value;
-            const ayFilter = document.getElementById('filterAidatAy').value;
-            const daireFilter = document.getElementById('filterAidatDaire').value;
-
-            let filtered = aidatlar;
-
-            if (blokFilter) filtered = filtered.filter(a => a.blok === blokFilter);
-            if (ayFilter) filtered = filtered.filter(a => a.ay === ayFilter);
-            if (daireFilter) filtered = filtered.filter(a => a.daire == daireFilter);
-
-            let csv = 'Tarih,Blok,Daire,Ay,Tutar\n';
-            filtered.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(aidat => {
-                csv += `${new Date(aidat.tarih).toLocaleDateString('tr-TR')},${aidat.blok} Blok,${aidat.daire},${aidat.ay},${aidat.tutar.toFixed(2)}\n`;
-            });
-
-            downloadCSV(csv, 'aidatlar.csv');
-        }
-
-        function exportGiderToExcel() {
-            const turFilter = document.getElementById('filterGiderTur').value;
-            const baslangic = document.getElementById('filterGiderBaslangic').value;
-            const bitis = document.getElementById('filterGiderBitis').value;
-
-            let filtered = giderler;
-
-            if (turFilter) filtered = filtered.filter(g => g.tur === turFilter);
-            if (baslangic) filtered = filtered.filter(g => g.tarih >= baslangic);
-            if (bitis) filtered = filtered.filter(g => g.tarih <= bitis);
-
-            let csv = 'Tarih,Gider Türü,Açıklama,Tutar\n';
-            filtered.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(gider => {
-                const aciklama = (gider.aciklama || '').replace(/,/g, ' ').replace(/\n/g, ' ');
-                csv += `${new Date(gider.tarih).toLocaleDateString('tr-TR')},${gider.tur},"${aciklama}",${gider.tutar.toFixed(2)}\n`;
-            });
-
-            downloadCSV(csv, 'giderler.csv');
-        }
-
-        function exportDaireToExcel() {
-            const blokFilter = document.getElementById('filterDaireBlok').value;
-            const daireFilter = document.getElementById('filterDaireNo').value;
-
-            let filtered = daireler;
-
-            if (blokFilter) filtered = filtered.filter(d => d.blok === blokFilter);
-            if (daireFilter) filtered = filtered.filter(d => d.no == daireFilter);
-
-            let csv = 'Blok,Daire No,Ev Sahibi,Telefon\n';
-            filtered.forEach(daire => {
-                csv += `${daire.blok} Blok,${daire.no},${daire.evSahibi || '-'},${daire.telefon || '-'}\n`;
-            });
-
-            downloadCSV(csv, 'daireler.csv');
-        }
-
-        function exportRaporToExcel() {
-            const ayFilter = document.getElementById('filterRaporAy').value;
-            const blokFilter = document.getElementById('filterRaporBlok').value;
-
-            let csv = 'ÖZAYDENİZ SİTESİ - GENEL RAPOR\n\n';
-
-            if (ayFilter) csv += `Ay: ${ayFilter}\n`;
-            if (blokFilter) csv += `Blok: ${blokFilter} Blok\n`;
-            csv += '\n';
-
-            // Özet bilgiler
-            csv += 'ÖZET\n';
-            csv += `Toplam Aidat Geliri,${document.getElementById('toplamAidat').textContent}\n`;
-            csv += `Toplam Gider,${document.getElementById('toplamGider').textContent}\n`;
-            csv += `Kasa Durumu,${document.getElementById('kasaDurum').textContent}\n\n`;
-
-            // Gider dağılımı
-            csv += 'GİDER DAĞILIMI\n';
-            csv += 'Gider Türü,Tutar\n';
-            const giderRows = document.getElementById('giderDagılımBody').querySelectorAll('tr');
-            giderRows.forEach(row => {
-                const cols = row.querySelectorAll('td');
-                if (cols.length === 2) {
-                    csv += `${cols[0].textContent},${cols[1].textContent}\n`;
-                }
-            });
-
-            csv += '\nBLOK BAZINDA AİDAT ÖZETİ\n';
-            csv += 'Blok,Toplam Aidat,Ödeme Sayısı\n';
-            const blokRows = document.getElementById('blokAidatBody').querySelectorAll('tr');
-            blokRows.forEach(row => {
-                const cols = row.querySelectorAll('td');
-                if (cols.length === 3) {
-                    csv += `${cols[0].textContent},${cols[1].textContent},${cols[2].textContent}\n`;
-                }
-            });
-
-            downloadCSV(csv, 'ozaydeniz-rapor.csv');
-        }
-
-        function downloadCSV(content, filename) {
-            const BOM = '\uFEFF'; // UTF-8 BOM for Excel
-            const blob = new Blob([BOM + content], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', filename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Bugünün tarihini varsayılan yap
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('aidatTarih')?.setAttribute('value', today);
-        document.getElementById('giderTarih')?.setAttribute('value', today);
-        document.getElementById('makbuzTarih')?.setAttribute('value', today);
-
-        // Aidat ve Gider kayıt fonksiyonlarını makbuz desteği ile override et
-        const originalSaveAidat = saveAidat;
-        saveAidat = function (event) {
-            event.preventDefault();
-
-            const aidat = {
-                id: Date.now(),
-                tarih: document.getElementById('aidatTarih').value,
-                blok: document.getElementById('aidatBlok').value,
-                daire: document.getElementById('aidatDaire').value,
-                ay: document.getElementById('aidatAy').value,
-                tutar: parseFloat(document.getElementById('aidatTutar').value)
-            };
-
-            aidatlar.push(aidat);
-            localStorage.setItem('aidatlar', JSON.stringify(aidatlar));
-
-            // Firebase'e kaydet
-            db.collection("aidatlar").doc(aidat.id.toString()).set(aidat);
-
-            // Makbuz varsa kaydet
-            const makbuzFile = document.getElementById('aidatMakbuz')?.files[0];
-            if (makbuzFile) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const makbuz = {
-                        id: Date.now() + Math.random(),
-                        isim: makbuzFile.name,
-                        tur: 'Aidat',
-                        tip: makbuzFile.type.startsWith('image/') ? 'image' : 'pdf',
-                        data: e.target.result,
-                        tarih: aidat.tarih,
-                        boyut: makbuzFile.size,
-                        blok: aidat.blok,
-                        daire: aidat.daire,
-                        tutar: aidat.tutar,
-                        giderTuru: '',
-                        aciklama: `${aidat.blok} Blok Daire ${aidat.daire} - ${aidat.ay} Aidatı`
-                    };
-                    makbuzlar.push(makbuz);
-                    localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
-
-                    // Firebase'e kaydet (1MB altındaysa)
-                    if (JSON.stringify(makbuz).length < 1000000) {
-                        db.collection("makbuzlar").doc(makbuz.id.toString()).set(makbuz);
-                    }
-                    populateYearFilters();
-                    filterMakbuzlar();
-                };
-                reader.readAsDataURL(makbuzFile);
-            }
-
-            showSuccessMessage('aidatSuccess');
-            event.target.reset();
-            filterAidatTable();
-            populateYearFilters();
-        };
-
-        const originalSaveGider = saveGider;
-        saveGider = function (event) {
-            event.preventDefault();
-
-            const gider = {
-                id: Date.now(),
-                tarih: document.getElementById('giderTarih').value,
-                tur: document.getElementById('giderTur').value,
-                aciklama: document.getElementById('giderAciklama').value,
-                tutar: parseFloat(document.getElementById('giderTutar').value)
-            };
-
-            giderler.push(gider);
-            localStorage.setItem('giderler', JSON.stringify(giderler));
-
-            // Firebase'e kaydet
-            db.collection("giderler").doc(gider.id.toString()).set(gider);
-
-            // Makbuz varsa kaydet
-            const makbuzFile = document.getElementById('giderMakbuz')?.files[0];
-            if (makbuzFile) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const makbuz = {
-                        id: Date.now() + Math.random(),
-                        isim: makbuzFile.name,
-                        tur: 'Gider',
-                        tip: makbuzFile.type.startsWith('image/') ? 'image' : 'pdf',
-                        data: e.target.result,
-                        tarih: gider.tarih,
-                        boyut: makbuzFile.size,
-                        blok: '',
-                        daire: '',
-                        tutar: gider.tutar,
-                        giderTuru: gider.tur,
-                        aciklama: gider.aciklama || gider.tur
-                    };
-                    makbuzlar.push(makbuz);
-                    localStorage.setItem('makbuzlar', JSON.stringify(makbuzlar));
-
-                    // Firebase'e kaydet (1MB altındaysa)
-                    if (JSON.stringify(makbuz).length < 1000000) {
-                        db.collection("makbuzlar").doc(makbuz.id.toString()).set(makbuz);
-                    }
-                    populateYearFilters();
-                    filterMakbuzlar();
-                };
-                reader.readAsDataURL(makbuzFile);
-            }
-
-            showSuccessMessage('giderSuccess');
-            event.target.reset();
-            filterGiderTable();
-            populateYearFilters();
-        };
     </script>
 </body>
 
