@@ -248,7 +248,7 @@
             white-space: nowrap;
         }
 
-        .logout-btn {
+        .header-icon-btn {
             background: transparent;
             color: #666;
             font-size: 20px;
@@ -262,7 +262,7 @@
             cursor: pointer;
         }
 
-        .logout-btn:hover {
+        .header-icon-btn:hover {
             background: #f0f0f0;
             color: #333;
         }
@@ -289,9 +289,7 @@
             flex-shrink: 0;
         }
 
-        .logout-btn:hover {
-            background: #c82333;
-        }
+        /* Mevcut logout butonu hover silindi, header-icon-btn kullanılıyor */
 
         .menu-buttons {
             display: grid;
@@ -877,7 +875,10 @@
                         Daire Bilgileri</button>
                     <button class="rapor-header-btn" onclick="showSection('rapor')">📊 Raporlar</button>
                 </div>
-                <button class="logout-btn" onclick="handleLogout()" title="Çıkış Yap">🚪</button>
+                <div class="header-buttons">
+                    <button class="header-icon-btn" onclick="handleLogout()" title="Çıkış Yap">🚪</button>
+                    <button class="header-icon-btn" onclick="backupData()" title="Veri Yedekle">💾</button>
+                </div>
             </div>
         </div>
 
@@ -1297,9 +1298,13 @@
 
                     <div class="form-group">
                         <label>Daire No:</label>
-                        <select id="daireNo" required>
-                            <option value="">Önce Blok Seçin</option>
-                        </select>
+                        <div style="display: flex; gap: 5px; width: 100%; align-items: center;">
+                            <select id="daireNo" required style="flex: 1;">
+                                <option value="">Önce Blok Seçin</option>
+                            </select>
+                            <button type="button" class="icon-btn" onclick="addNewDaireNo()"
+                                style="background: #667eea; width: 30px; height: 30px; font-size: 18px;">+</button>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -1600,7 +1605,7 @@
         let aidatlar = JSON.parse(localStorage.getItem('aidatlar') || '[]');
         let giderler = JSON.parse(localStorage.getItem('giderler') || '[]');
         let gelirler = JSON.parse(localStorage.getItem('gelirler') || '[]');
-        let daireler = JSON.parse(localStorage.getItem('daireler') || '[]');
+        let daireler = JSON.parse(localStorage.getItem('daireler') || '[{"blok":"A","no":1,"evSahibi":"HAKKI ACAR","telefon":""},{"blok":"A","no":2,"evSahibi":"SAİT VURANKAYA","telefon":""},{"blok":"A","no":3,"evSahibi":"ENES BAYRAKTAR","telefon":""},{"blok":"A","no":4,"evSahibi":"ADNAN KAVAK","telefon":""},{"blok":"A","no":5,"evSahibi":"RECEP YAVUZ","telefon":""},{"blok":"A","no":6,"evSahibi":"HAKAN İLKNUR ÇANGAR","telefon":""},{"blok":"A","no":7,"evSahibi":"İZZET BOZLU","telefon":""},{"blok":"A","no":8,"evSahibi":"MURAT ÇANKAYA","telefon":""},{"blok":"A","no":9,"evSahibi":"CELAL KORKMAZ","telefon":""},{"blok":"A","no":10,"evSahibi":"ALİ KOTANAK","telefon":""},{"blok":"A","no":11,"evSahibi":"İBRAHİM ERBİL","telefon":""},{"blok":"A","no":12,"evSahibi":"YUNUS KUTUN","telefon":""},{"blok":"A","no":13,"evSahibi":"ABDUL KADİR CENGİZ","telefon":""},{"blok":"A","no":14,"evSahibi":"FİKRET ÖZTEKİN","telefon":""},{"blok":"B","no":1,"evSahibi":"MUSLU KARADEMİR","telefon":""},{"blok":"B","no":2,"evSahibi":"AYŞE DUD ÇAVDAR","telefon":""},{"blok":"B","no":3,"evSahibi":"İSMAİL BÜLBÜL","telefon":""},{"blok":"B","no":4,"evSahibi":"AYŞENUR KARABULUT","telefon":""},{"blok":"B","no":5,"evSahibi":"EROL DEMİR","telefon":""},{"blok":"B","no":6,"evSahibi":"ABDULLAH KORKMAZ","telefon":""},{"blok":"B","no":7,"evSahibi":"HİLAL ATİLA","telefon":""},{"blok":"B","no":8,"evSahibi":"SADIK TAŞKAN","telefon":""},{"blok":"B","no":9,"evSahibi":"AZİZE ZENKİN","telefon":""},{"blok":"B","no":10,"evSahibi":"ŞAHİN İŞLEK","telefon":""},{"blok":"B","no":11,"evSahibi":"HASAN ÖZKAN","telefon":""},{"blok":"B","no":12,"evSahibi":"HATİCE ŞAHİN","telefon":""},{"blok":"B","no":13,"evSahibi":"","telefon":""},{"blok":"B","no":14,"evSahibi":"","telefon":""},{"blok":"C","no":1,"evSahibi":"TALİP ÇAKSEN","telefon":""},{"blok":"C","no":2,"evSahibi":"TALİP ÇAKSEN","telefon":""},{"blok":"C","no":3,"evSahibi":"EMRE  İŞLEK","telefon":""},{"blok":"C","no":4,"evSahibi":"HAYRETTİN DİNSEL","telefon":""},{"blok":"C","no":5,"evSahibi":"EMRE DEMİRCİ","telefon":""},{"blok":"C","no":6,"evSahibi":"NECLA YILMAZ","telefon":""},{"blok":"C","no":7,"evSahibi":"AYHAN BUZALAN","telefon":""},{"blok":"C","no":8,"evSahibi":"FİKRİ KARAGİN","telefon":""},{"blok":"C","no":9,"evSahibi":"SAİM ENES ÖZTAŞ","telefon":""},{"blok":"C","no":10,"evSahibi":"HÜSEYİN ŞENTÜRK","telefon":""},{"blok":"C","no":11,"evSahibi":"ÖZGÜR ADANIR","telefon":""},{"blok":"C","no":12,"evSahibi":"ÖZGÜR CANTİLAVA","telefon":""},{"blok":"C","no":13,"evSahibi":"ALİM ZEKİ ÇETİNKAYA","telefon":""},{"blok":"C","no":14,"evSahibi":"MUSTAFA BAYSAL","telefon":""}]');
         let makbuzlar = JSON.parse(localStorage.getItem('makbuzlar') || '[]');
 
         // Kullanıcı bilgileri
@@ -1794,7 +1799,6 @@
                     alert('Hata: Dosya okunamadı. Lütfen geçerli bir yedek dosyası seçin.');
                 }
             };
-            reader.readAsText(file);
             event.target.value = '';
         }
 
@@ -1972,13 +1976,45 @@
             select.innerHTML = '<option value="">Daire Seçin</option>';
 
             if (blok) {
-                // Her blok için 1-14 arası daireler
+                // Her blok için 1-14 arası varsayılan daireler
                 for (let i = 1; i <= 14; i++) {
                     const option = document.createElement('option');
                     option.value = i;
                     option.textContent = i;
                     select.appendChild(option);
                 }
+
+                // Eğer daireler listesinde 1-14 dışı veya silinip tekrar eklenen özel numaralar varsa onları da ekle
+                daireler.filter(d => d.blok === blok && (parseInt(d.no) > 14 || isNaN(d.no))).forEach(d => {
+                    const option = document.createElement('option');
+                    option.value = d.no;
+                    option.textContent = d.no;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        // Yeni Daire No Ekleme (15, 16 vb.)
+        function addNewDaireNo() {
+            const blok = document.getElementById('daireBlok').value;
+            if (!blok) { alert("Lütfen önce blok seçin!"); return; }
+
+            const yeniNo = prompt("Yeni daire numarasını girin (Örn: 15):");
+            if (yeniNo && yeniNo.trim() !== "") {
+                const no = yeniNo.trim();
+                const selects = ['aidatDaire', 'daireNo', 'gelirDaire', 'filterAidatDaire', 'filterGelirDaire'];
+
+                selects.forEach(id => {
+                    const select = document.getElementById(id);
+                    if (select) {
+                        const option = document.createElement('option');
+                        option.value = no;
+                        option.textContent = no;
+                        select.appendChild(option);
+                    }
+                });
+
+                document.getElementById('daireNo').value = no;
             }
         }
 
@@ -2184,19 +2220,36 @@
             const evSahibi = document.getElementById('daireEvSahibi').value;
             const telefon = document.getElementById('daireTelefon').value;
 
-            const index = daireler.findIndex(d => d.blok === blok && d.no == no);
+            if (!blok || !no) {
+                alert("Lütfen blok ve daire no seçin!");
+                return;
+            }
+
+            const index = daireler.findIndex(d => d.blok === blok && d.no.toString() === no.toString());
+
             if (index !== -1) {
+                // Mevcut daireyi güncelle
                 daireler[index].evSahibi = evSahibi;
                 daireler[index].telefon = telefon;
-                localStorage.setItem('daireler', JSON.stringify(daireler));
-
-                // Firebase'e kaydet
+                // Firestore'da belgenin ID'sini Blok_No şeklinde tutuyoruz
                 db.collection("daireler").doc(`${blok}_${no}`).set(daireler[index]);
-
-                showSuccessMessage('daireSuccess');
-                event.target.reset();
-                filterDaireTable();
+            } else {
+                // Yeni daire objesi oluştur ve listeye ekle
+                const yeniDaire = {
+                    blok: blok,
+                    no: isNaN(no) ? no : parseInt(no),
+                    evSahibi: evSahibi,
+                    telefon: telefon
+                };
+                daireler.push(yeniDaire);
+                // Firestore'a yeni belge olarak ekle
+                db.collection("daireler").doc(`${blok}_${no}`).set(yeniDaire);
             }
+
+            localStorage.setItem('daireler', JSON.stringify(daireler));
+            showSuccessMessage('daireSuccess');
+            event.target.reset();
+            filterDaireTable();
         }
 
         // Başarı mesajı göster
@@ -2405,6 +2458,10 @@
                     <td>${daire.no}</td>
                     <td>${daire.evSahibi || '-'}</td>
                     <td>${daire.telefon || '-'}</td>
+                    <td style="text-align: center;">
+                        <button class="icon-btn" onclick="deleteDaire('${daire.blok}', '${daire.no}')" 
+                            style="background: #dc3545; width: 30px; height: 30px; font-size: 18px; margin: 0 auto;">-</button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -2418,6 +2475,17 @@
         }
 
         // Silme işlemleri
+        function deleteDaire(blok, no) {
+            if (confirm(`${blok} Blok No ${no} dairesini silmek istediğinizden emin misiniz?`)) {
+                daireler = daireler.filter(d => !(d.blok === blok && d.no.toString() === no.toString()));
+                localStorage.setItem('daireler', JSON.stringify(daireler));
+                updateDaireTable();
+
+                // Firestore'u güncelle
+                db.collection('yonetim_data').doc('daireler').set({ list: daireler });
+            }
+        }
+
         function deleteAidat(id) {
             if (confirm('Bu ödemeyi silmek istediğinizden emin misiniz?')) {
                 aidatlar = aidatlar.filter(a => a.id !== id);
