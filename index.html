@@ -968,18 +968,25 @@
                 return this;
             };
         }
+
+        // Tab fonksiyonları module yüklenene kadar çağrıları kuyruğa al
+        window._tabQueue = [];
+        window.showTab = function(tabId, btn) { window._tabQueue.push(['showTab', tabId, btn]); };
+        window.showBlok = function(blok, btn) { window._tabQueue.push(['showBlok', blok, btn]); };
+        window.showTabloTab = function(tabId, btn) { window._tabQueue.push(['showTabloTab', tabId, btn]); };
+        window.logout = function() { if(confirm('Çıkış yapmak istediğinize emin misiniz?')) window.location.reload(); };
     </script>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
-            apiKey: "BURAYA_API_KEY",
-            authDomain: "BURAYA_AUTH_DOMAIN",
-            projectId: "BURAYA_PROJECT_ID",
-            storageBucket: "BURAYA_STORAGE_BUCKET",
-            messagingSenderId: "BURAYA_MESSAGING_SENDER_ID",
-            appId: "BURAYA_APP_ID"
+            apiKey: "AIzaSyBUkYnw8wRcppqf0lKz33SyzXgcSmKZpaE",
+            authDomain: "ozaydeniz-d983c.firebaseapp.com",
+            projectId: "ozaydeniz-d983c",
+            storageBucket: "ozaydeniz-d983c.firebasestorage.app",
+            messagingSenderId: "200844766910",
+            appId: "1:200844766910:web:575facdd595f52dd3f78ef"
         };
 
         // ========== GLOBAL DEĞİŞKENLER (Firebase'den önce) ==========
@@ -2180,8 +2187,6 @@
             document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
             btn.classList.add('active');
-
-            // Eğer belirli sekmelerse, bazı tabloları tekrar render et
             if (tabId === 'tablo') {
                 renderAidatTablo();
                 renderGiderTablo();
@@ -2207,6 +2212,10 @@
                 window.location.reload();
             }
         };
+
+        // Kuyruktaki tab çağrılarını işle
+        (window._tabQueue || []).forEach(([fn, a, b]) => window[fn] && window[fn](a, b));
+        window._tabQueue = [];
 
         // ========== EXCEL EXPORT ==========
         window.exportAidatExcel = function() {
