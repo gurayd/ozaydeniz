@@ -226,6 +226,47 @@
             margin-bottom: 20px;
         }
 
+        .aidat-form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .aidat-col {
+            padding: 16px;
+            border-right: 1px solid #e0e0e0;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .aidat-col:last-child {
+            border-right: none;
+        }
+
+        .aidat-col .form-group {
+            margin: 0;
+        }
+
+        @media (max-width: 900px) {
+            .aidat-form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .aidat-col:nth-child(2) { border-right: none; }
+            .aidat-col:nth-child(1), .aidat-col:nth-child(2) { border-bottom: 1px solid #e0e0e0; }
+        }
+
+        @media (max-width: 580px) {
+            .aidat-form-grid { grid-template-columns: 1fr; }
+            .aidat-col { border-right: none; border-bottom: 1px solid #e0e0e0; }
+            .aidat-col:last-child { border-bottom: none; }
+        }
+
         .form-group {
             display: flex;
             flex-direction: column;
@@ -584,45 +625,69 @@
         <!-- ============ AİDAT İŞLEMLERİ ============ -->
         <div id="tab-aidat" class="tab-content">
             <h2>Aidat İşlemleri</h2>
-            <form id="aidatForm" class="form-grid">
-                <div class="form-group">
-                    <label>Yıl *</label>
-                    <select id="aidatYil" required onchange="updateAidatTutar()">
-                        <option value="">Seçiniz</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Blok *</label>
-                    <select id="aidatBlok" required onchange="populateDaireSelect('aidatBlok','aidatDaire')">
-                        <option value="">Seçiniz</option>
-                        <option value="A">A Blok</option>
-                        <option value="B">B Blok</option>
-                        <option value="C">C Blok</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Daire *</label>
-                    <select id="aidatDaire" required>
-                        <option value="">Önce blok seçin</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Aylık Tutar (₺) *</label>
-                    <input type="number" id="aidatTutar" step="0.01" required readonly style="background: #f0f0f0;">
-                </div>
-                <div class="form-group">
-                    <label>Tarih *</label>
-                    <input type="date" id="aidatTarih" required>
+            <form id="aidatForm">
+                <div class="aidat-form-grid">
+                    <!-- Sütun 1: Yıl + Ay -->
+                    <div class="aidat-col">
+                        <div class="form-group">
+                            <label>Yıl *</label>
+                            <select id="aidatYil" required onchange="updateAidatTutar()">
+                                <option value="">Seçiniz</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ay *</label>
+                            <select id="aidatAySelect" required onchange="hesaplaToplam()">
+                                <option value="">Seçiniz</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Sütun 2: Blok + Tarih -->
+                    <div class="aidat-col">
+                        <div class="form-group">
+                            <label>Blok *</label>
+                            <select id="aidatBlok" required onchange="populateDaireSelect('aidatBlok','aidatDaire'); populateDukkanSelect();">
+                                <option value="">Seçiniz</option>
+                                <option value="A">A Blok</option>
+                                <option value="B">B Blok</option>
+                                <option value="C">C Blok</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tarih *</label>
+                            <input type="date" id="aidatTarih" required>
+                        </div>
+                    </div>
+                    <!-- Sütun 3: Daire + Dükkan No -->
+                    <div class="aidat-col">
+                        <div class="form-group">
+                            <label>Daire No</label>
+                            <select id="aidatDaire" onchange="onAidatDaireChange()">
+                                <option value="">Önce blok seçin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Dükkan No</label>
+                            <select id="aidatDukkan" onchange="onAidatDukkanChange()">
+                                <option value="">— veya dükkan —</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Sütun 4: Aylık Tutar + Dükkan Tutar -->
+                    <div class="aidat-col">
+                        <div class="form-group">
+                            <label>Aylık Tutar (₺)</label>
+                            <input type="number" id="aidatTutar" step="0.01" readonly style="background:#f0f0f0;">
+                        </div>
+                        <div class="form-group">
+                            <label>Dükkan Aylık Tutar (₺)</label>
+                            <input type="number" id="aidatDukkanTutar" step="0.01" readonly style="background:#f0f0f0;">
+                        </div>
+                    </div>
                 </div>
             </form>
-            <div style="margin: 20px 0;" class="form-group" style="max-width:200px;">
-                <label style="font-weight: 600; margin-bottom: 5px; display: block;">Ay *</label>
-                <select id="aidatAySelect" required onchange="hesaplaToplam()" style="padding:10px; border:2px solid #ddd; border-radius:8px; font-size:14px; width:200px;">
-                    <option value="">Seçiniz</option>
-                </select>
-            </div>
-            <div style="margin-bottom: 20px; padding: 15px; background: #e7f3ff; border-radius: 8px;">
-                <p style="font-weight: 600;">Tutar: <span id="toplamAidatTutar">0.00</span> ₺</p>
+            <div style="margin-bottom: 20px; padding: 15px; background: #e7f3ff; border-radius: 8px; display:flex; align-items:center; gap:20px;">
+                <p style="font-weight: 600; margin:0;">Tutar: <span id="toplamAidatTutar">0.00</span> ₺</p>
             </div>
             <button class="btn btn-primary" onclick="saveAidat()">Aidat Kaydet</button>
 
@@ -884,6 +949,26 @@
                 <div id="aidatAyarlariList"></div>
             </div>
 
+            <!-- Dükkan Aidat Belirleme -->
+            <div class="hesaplama-section">
+                <h3>🏪 Aylık Dükkan Aidat Belirleme</h3>
+                <div class="inline-row" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label>Yıl</label>
+                        <select id="dukkanAidatAyarYil"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Aylık Dükkan Aidat Tutarı (₺)</label>
+                        <input type="number" id="aylikDukkanAidat" step="0.01" placeholder="1000">
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="saveDukkanAidatAyarlari()">Kaydet</button>
+                    </div>
+                </div>
+                <h4 style="margin-top: 20px; margin-bottom: 10px;">Kayıtlı Dükkan Aidat Tutarları</h4>
+                <div id="dukkanAidatAyarlariList"></div>
+            </div>
+
             <!-- Gider Kalemi Belirleme -->
             <div class="hesaplama-section">
                 <h3>📝 Gider Kalemi Belirleme</h3>
@@ -996,6 +1081,7 @@
         window.sabitGiderler = [];
         window.giderKalemleri = [];
         window.aidatAyarlari = {};
+        window.dukkanAidatAyarlari = {};
         window.selectedDaireler = [];
         window.sabitGiderTurler = ['Elektrik', 'Su', 'Doğalgaz', 'Asansör Bakımı', 'Temizlik', 'Güvenlik'];
 
@@ -1081,6 +1167,16 @@
             }
             renderAidatAyarlari();
             updateAidatTutar();
+        });
+
+        onSnapshot(doc(db, "ayarlar", "dukkanAidat"), (docSnap) => {
+            if (docSnap.exists()) {
+                window.dukkanAidatAyarlari = docSnap.data();
+            } else {
+                window.dukkanAidatAyarlari = {};
+            }
+            renderDukkanAidatAyarlari();
+            updateDukkanAidatTutar();
         });
 
         onSnapshot(doc(db, "ayarlar", "sabitGiderTurler"), (docSnap) => {
@@ -1230,7 +1326,14 @@
         populateAyFilter();
 
         window.hesaplaToplam = function () {
-            const aylikTutar = parseFloat(document.getElementById('aidatTutar').value) || 0;
+            const dukkan = document.getElementById('aidatDukkan') ? document.getElementById('aidatDukkan').value : '';
+            const daire = document.getElementById('aidatDaire') ? document.getElementById('aidatDaire').value : '';
+            let aylikTutar = 0;
+            if (dukkan && !daire) {
+                aylikTutar = parseFloat(document.getElementById('aidatDukkanTutar').value) || 0;
+            } else {
+                aylikTutar = parseFloat(document.getElementById('aidatTutar').value) || 0;
+            }
             document.getElementById('toplamAidatTutar').textContent = aylikTutar.toFixed(2);
         };
 
@@ -1241,20 +1344,103 @@
             } else {
                 document.getElementById('aidatTutar').value = '';
             }
+            // Dükkan tutarını da güncelle
+            if (window.updateDukkanAidatTutar) updateDukkanAidatTutar();
             hesaplaToplam();
+        };
+
+        // ===== DÜKKAN AİDAT FONKSİYONLARI =====
+        const dukkanNolari = [1, 2, 13, 14]; // Her blok için dükkan no'ları
+        window.dukkanNolari = dukkanNolari;
+
+        // Dükkan select'i doldur (blok seçilince)
+        window.populateDukkanSelect = function() {
+            const blok = document.getElementById('aidatBlok').value;
+            const sel = document.getElementById('aidatDukkan');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">— veya dükkan seç —</option>';
+            if (!blok) return;
+            dukkanNolari.forEach(no => {
+                const sakin = getSakinAdi(blok, no);
+                const label = sakin ? `${blok}${no} - ${sakin}` : `${blok}${no}`;
+                sel.innerHTML += `<option value="${no}">${label}</option>`;
+            });
+        };
+
+        // Daire seçilince dükkan temizle
+        window.onAidatDaireChange = function() {
+            const daire = document.getElementById('aidatDaire').value;
+            if (daire) {
+                document.getElementById('aidatDukkan').value = '';
+                document.getElementById('aidatDukkanTutar').value = '';
+            }
+            updateAidatTutar();
+        };
+
+        // Dükkan seçilince daire temizle
+        window.onAidatDukkanChange = function() {
+            const dukkan = document.getElementById('aidatDukkan').value;
+            if (dukkan) {
+                document.getElementById('aidatDaire').value = '';
+                document.getElementById('aidatTutar').value = '';
+            }
+            updateDukkanAidatTutar();
+        };
+
+        window.updateDukkanAidatTutar = function() {
+            const yil = document.getElementById('aidatYil').value;
+            const dukkan = document.getElementById('aidatDukkan') ? document.getElementById('aidatDukkan').value : '';
+            if (yil && dukkan && window.dukkanAidatAyarlari && window.dukkanAidatAyarlari[yil]) {
+                document.getElementById('aidatDukkanTutar').value = window.dukkanAidatAyarlari[yil];
+            } else if (dukkan) {
+                document.getElementById('aidatDukkanTutar').value = '';
+            }
+            hesaplaToplam();
+        };
+
+        window.saveDukkanAidatAyarlari = async function() {
+            const yil = document.getElementById('dukkanAidatAyarYil').value;
+            const tutar = parseFloat(document.getElementById('aylikDukkanAidat').value);
+            if (!yil || !tutar) { alert('Lütfen yıl ve tutar girin!'); return; }
+            try {
+                await setDoc(doc(db, "ayarlar", "dukkanAidat"), { [yil]: tutar }, { merge: true });
+                document.getElementById('aylikDukkanAidat').value = '';
+                alert('Dükkan aidat ayarı kaydedildi!');
+            } catch(e) { console.error(e); alert('Kaydedilirken hata oluştu!'); }
+        };
+
+        window.renderDukkanAidatAyarlari = function() {
+            const list = document.getElementById('dukkanAidatAyarlariList');
+            if (!list) return;
+            list.innerHTML = '';
+            if (!window.dukkanAidatAyarlari) return;
+            Object.keys(window.dukkanAidatAyarlari).sort((a, b) => b - a).forEach(yil => {
+                list.innerHTML += `
+                    <div class="aidat-ayar-row">
+                        <strong>${yil} Yılı:</strong>
+                        <span>${parseFloat(window.dukkanAidatAyarlari[yil]).toFixed(2)} ₺</span>
+                    </div>
+                `;
+            });
         };
 
         window.saveAidat = async function () {
             const yil = document.getElementById('aidatYil').value;
             const blok = document.getElementById('aidatBlok').value;
-            const daire = document.getElementById('aidatDaire').value;
             const tarih = document.getElementById('aidatTarih').value;
-            const aylikTutar = parseFloat(document.getElementById('aidatTutar').value);
-
             const ay = document.getElementById('aidatAySelect').value;
 
-            if (!yil || !blok || !daire || !tarih || !ay || !aylikTutar) {
-                alert('Lütfen tüm alanları doldurun!');
+            // Daire mi dükkan mı seçildi?
+            const daire = document.getElementById('aidatDaire').value;
+            const dukkan = document.getElementById('aidatDukkan').value;
+            const isDukkan = !!dukkan && !daire;
+            const secilenNo = isDukkan ? dukkan : daire;
+            const aylikTutar = isDukkan
+                ? parseFloat(document.getElementById('aidatDukkanTutar').value)
+                : parseFloat(document.getElementById('aidatTutar').value);
+
+            if (!yil || !blok || !secilenNo || !tarih || !ay || !aylikTutar) {
+                alert('Lütfen tüm alanları doldurun! (Daire veya dükkan seçin)');
                 return;
             }
 
@@ -1262,20 +1448,24 @@
             const mevcut = window.aidatlar.find(a =>
                 String(a.yil) === String(yil) &&
                 a.blok === blok &&
-                String(a.daire) === String(daire) &&
+                String(a.daire) === String(secilenNo) &&
                 a.ay === ay
             );
             if (mevcut) {
-                if (!confirm(`⚠️ ${blok}${daire} numaralı daire için ${yil} yılı ${ay} ayı aidatı zaten kayıtlı!\n\nYine de eklemek istiyor musunuz?`)) return;
+                const tip = isDukkan ? 'dükkan' : 'daire';
+                if (!confirm(`⚠️ ${blok}${secilenNo} numaralı ${tip} için ${yil} yılı ${ay} ayı aidatı zaten kayıtlı!\n\nYine de eklemek istiyor musunuz?`)) return;
             }
 
             try {
                 await addDoc(collection(db, "aidatlar"), {
-                    yil, blok, daire, tutar: aylikTutar, tarih, ay,
+                    yil, blok, daire: secilenNo, tutar: aylikTutar, tarih, ay,
+                    tip: isDukkan ? 'dukkan' : 'daire',
                     createdAt: new Date().toISOString()
                 });
                 document.getElementById('aidatForm').reset();
                 document.getElementById('aidatAySelect').value = '';
+                document.getElementById('aidatDukkan').value = '';
+                document.getElementById('aidatDukkanTutar').value = '';
                 document.getElementById('toplamAidatTutar').textContent = '0.00';
                 setTodayDates();
                 alert('Aidat kaydedildi!');
@@ -2290,7 +2480,8 @@
             const aidatYilSelects = [
                 { id: 'tabloYil' },
                 { id: 'aidatYil' },
-                { id: 'aidatAyarYil' }
+                { id: 'aidatAyarYil' },
+                { id: 'dukkanAidatAyarYil' }
             ];
 
             aidatYilSelects.forEach(({ id }) => {
