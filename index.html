@@ -408,7 +408,7 @@
         }
 
         .checkbox-table td {
-            text-align: center;
+            text-align: left;
             font-size: 12px;
         }
 
@@ -750,14 +750,14 @@
                 <h3>📋 Daire Bazlı Gelirler</h3>
                 <form id="giderForm" class="form-grid">
                     <div class="form-group">
-                        <label>Gider Kalemi *</label>
+                        <label>Ekstra Gider Kalemi *</label>
                         <select id="giderKalemiSelect" required onchange="updateGiderInfo()">
                             <option value="">Seçiniz</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Blok *</label>
-                        <select id="giderBlok" required onchange="populateDaireSelect('giderBlok','giderDaire')">
+                        <select id="giderBlok" required onchange="populateDaireSelect('giderBlok','giderDaire'); updateGiderKalanInfo();">
                             <option value="">Seçiniz</option>
                             <option value="A">A Blok</option>
                             <option value="B">B Blok</option>
@@ -766,13 +766,17 @@
                     </div>
                     <div class="form-group">
                         <label>Daire *</label>
-                        <select id="giderDaire" required>
+                        <select id="giderDaire" required onchange="updateGiderKalanInfo()">
                             <option value="">Önce blok seçin</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Daire Başı Tutar (₺) *</label>
-                        <input type="number" id="giderTutar" step="0.01" required>
+                        <label>Daire Başı Tutar (₺)</label>
+                        <input type="number" id="giderTutar" step="0.01" readonly style="background:#f0f0f0; font-weight:600;">
+                    </div>
+                    <div class="form-group">
+                        <label>Bu Sefer Ödenecek Tutar (₺) *</label>
+                        <input type="number" id="giderOdenenTutar" step="0.01" min="0.01" placeholder="Tam veya kısmi" oninput="updateGiderKalanInfo()">
                     </div>
                     <div class="form-group">
                         <label>Tarih *</label>
@@ -783,7 +787,9 @@
                         <input type="text" id="giderNot" placeholder="Opsiyonel">
                     </div>
                 </form>
-                <button class="btn btn-success" onclick="saveGider()">Gelir Kaydet</button>
+                <div id="giderKalanInfo" style="display:none; margin-bottom:12px; padding:12px 15px; background:#fff8e1; border:1px solid #ffe082; border-radius:8px; font-size:13px;">
+                </div>
+                <button class="btn btn-success" onclick="saveGider()">Ödeme Ekle</button>
             </div>
 
             <!-- Bölüm 2: Sabit Giderler -->
@@ -869,6 +875,8 @@
                         <th>Daire</th>
                         <th>Sakin</th>
                         <th>Tutar</th>
+                        <th>Ödenen</th>
+                        <th>Kalan</th>
                         <th>Not</th>
                         <th>İşlem</th>
                     </tr>
@@ -882,7 +890,7 @@
             <h2>Genel Tablo</h2>
             <div class="sub-tabs">
                 <button class="sub-tab active" onclick="showTabloTab('aidat', this)">Aidat Ödeme Durumu</button>
-                <button class="sub-tab" onclick="showTabloTab('gider', this)">Gider Ödeme Durumu</button>
+                <button class="sub-tab" onclick="showTabloTab('gider', this)">Ekstra Gider Ödeme Durumu</button>
             </div>
             <div id="tablo-aidat" class="sub-tab-content active">
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
@@ -1533,9 +1541,61 @@
         // ========== GİDER İŞLEMLERİ ==========
         window.updateGiderInfo = function () {
             const kalemId = document.getElementById('giderKalemiSelect').value;
-            if (!kalemId) { document.getElementById('giderTutar').value = ''; return; }
+            if (!kalemId) {
+                document.getElementById('giderTutar').value = '';
+                hideGiderKalanInfo();
+                return;
+            }
             const kalem = window.giderKalemleri.find(k => k.id === kalemId);
             if (kalem) document.getElementById('giderTutar').value = kalem.daireBasinaTutar.toFixed(2);
+            updateGiderKalanInfo();
+        };
+
+        function hideGiderKalanInfo() {
+            const el = document.getElementById('giderKalanInfo');
+            if (el) el.style.display = 'none';
+        }
+
+        window.updateGiderKalanInfo = function () {
+            const kalemId = document.getElementById('giderKalemiSelect').value;
+            const blok = document.getElementById('giderBlok').value;
+            const daire = document.getElementById('giderDaire').value;
+            const infoEl = document.getElementById('giderKalanInfo');
+            if (!infoEl) return;
+
+            if (!kalemId || !blok || !daire) { infoEl.style.display = 'none'; return; }
+
+            const kalem = window.giderKalemleri.find(k => k.id === kalemId);
+            if (!kalem) return;
+
+            const daireBasiTutar = kalem.daireBasinaTutar || 0;
+            // Toplam ödenen: bu daireye ait tüm kayıtların odenenTutar toplamı
+            const mevcutOdemeler = window.giderler.filter(g =>
+                g.kalemId === kalemId && g.blok === blok && String(g.daire) === String(daire)
+            );
+            const toplamOdenen = mevcutOdemeler.reduce((s, g) => s + (parseFloat(g.odenenTutar) || 0), 0);
+            const kalan = daireBasiTutar - toplamOdenen;
+
+            if (kalan <= 0) {
+                infoEl.style.display = 'block';
+                infoEl.style.background = '#f0fff4';
+                infoEl.style.borderColor = '#a8e6b8';
+                infoEl.innerHTML = `<strong style="color:#28a745;">✓ ${blok}${daire} — Bu gider tam ödenmiş!</strong>`;
+                return;
+            }
+
+            const buSefer = parseFloat(document.getElementById('giderOdenenTutar').value) || 0;
+            infoEl.style.display = 'block';
+            infoEl.style.background = '#fff8e1';
+            infoEl.style.borderColor = '#ffe082';
+            infoEl.innerHTML = `
+                <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                    <span>💰 <strong>Toplam:</strong> ${daireBasiTutar.toFixed(2)} ₺</span>
+                    <span>✅ <strong>Ödenmiş:</strong> <span style="color:#27ae60;">${toplamOdenen.toFixed(2)} ₺</span></span>
+                    <span>⏳ <strong>Kalan:</strong> <span style="color:#e67e22; font-weight:700;">${kalan.toFixed(2)} ₺</span></span>
+                    ${buSefer > 0 ? `<span>📝 <strong>Bu ödemeyle kalan:</strong> <span style="color:${Math.max(0, kalan-buSefer) < 0.01 ? '#28a745' : '#dc3545'}; font-weight:700;">${Math.max(0, kalan-buSefer).toFixed(2)} ₺</span></span>` : ''}
+                </div>
+            `;
         };
 
         window.saveGider = async function () {
@@ -1543,31 +1603,52 @@
             const blok = document.getElementById('giderBlok').value;
             const daire = document.getElementById('giderDaire').value;
             const tutar = parseFloat(document.getElementById('giderTutar').value);
+            const buSeferOdenen = parseFloat(document.getElementById('giderOdenenTutar').value);
             const tarih = document.getElementById('giderTarih').value;
             const not_ = document.getElementById('giderNot').value;
 
-            if (!kalemId || !blok || !daire || !tutar || !tarih) {
-                alert('Lütfen zorunlu alanları doldurun!');
+            if (!kalemId || !blok || !daire || !tutar || !tarih || isNaN(buSeferOdenen) || buSeferOdenen <= 0) {
+                alert('Lütfen tüm alanları doldurun ve geçerli bir ödeme tutarı girin!');
                 return;
             }
             const kalem = window.giderKalemleri.find(k => k.id === kalemId);
 
-            // Mükerrer kayıt kontrolü
-            const mevcutGider = window.giderler.find(g =>
-                g.kalemId === kalemId &&
-                g.blok === blok &&
-                String(g.daire) === String(daire)
+            // Mevcut ödemeleri bul
+            const mevcutOdemeler = window.giderler.filter(g =>
+                g.kalemId === kalemId && g.blok === blok && String(g.daire) === String(daire)
             );
-            if (mevcutGider) {
-                if (!confirm(`⚠️ ${blok}${daire} numaralı daire için "${kalem.ad}" gideri zaten kayıtlı!\n\nYine de eklemek istiyor musunuz?`)) return;
+            const toplamOdenmis = mevcutOdemeler.reduce((s, g) => s + (parseFloat(g.odenenTutar) || 0), 0);
+            const kalan = tutar - toplamOdenmis;
+
+            if (kalan <= 0) {
+                alert(`${blok}${daire} numaralı daire için "${kalem.ad}" gideri zaten tam ödenmiş!`);
+                return;
+            }
+            if (buSeferOdenen > kalan + 0.01) {
+                alert(`Ödenen tutar kalan tutardan (${kalan.toFixed(2)} ₺) fazla olamaz!`);
+                return;
             }
 
             try {
+                // Her ödemeyi ayrı kayıt olarak ekle (kümülatif takip)
                 await addDoc(collection(db, "giderler"), {
-                    kalemId, kalemAd: kalem.ad, blok, daire, tutar, tarih,
+                    kalemId, kalemAd: kalem.ad, blok, daire, tutar, odenenTutar: buSeferOdenen, tarih,
                     not: not_, tip: 'daire',
                     createdAt: new Date().toISOString()
                 });
+                document.getElementById('giderOdenenTutar').value = '';
+                document.getElementById('giderNot').value = '';
+                document.getElementById('giderTarih').value = '';
+                setTodayDates();
+                updateGiderKalanInfo();
+                const yeniKalan = kalan - buSeferOdenen;
+                if (yeniKalan <= 0.01) {
+                    alert(`✓ ${blok}${daire} — "${kalem.ad}" gideri tam olarak ödendi!`);
+                } else {
+                    alert(`Ödeme kaydedildi. Kalan: ${yeniKalan.toFixed(2)} ₺`);
+                }
+                return;
+                // (reset aşağıda - eski kod kaldırıldı)
                 document.getElementById('giderForm').reset();
                 setTodayDates();
                 alert('Gider kaydedildi!');
@@ -1715,15 +1796,33 @@
 
             allItems.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(item => {
                 const sakin = (item.blok !== '-' && item.daire !== '-') ? getSakinAdi(item.blok, item.daire) : '';
+                const tutar = parseFloat(item.tutar) || 0;
+                let odenen, kalan, tamOdendi;
+                if (item.tipKey === 'daire') {
+                    const tumOdemeler = window.giderler.filter(g =>
+                        g.kalemId === item.kalemId && g.blok === item.blok && String(g.daire) === String(item.daire)
+                    );
+                    odenen = tumOdemeler.reduce((s, g) => s + (parseFloat(g.odenenTutar) || 0), 0);
+                    kalan = tutar - odenen;
+                    tamOdendi = kalan <= 0.001;
+                } else {
+                    odenen = tutar; kalan = 0; tamOdendi = true;
+                }
+                const rowBg = tamOdendi ? '#f0fff4' : (odenen > 0 ? '#fffbf0' : 'white');
+                const kalanCell = tamOdendi
+                    ? '<span style="color:#28a745;font-size:16px;font-weight:bold;">✓</span>'
+                    : `<span style="color:#dc3545;font-weight:600;">${kalan.toFixed(2)} ₺</span>`;
                 tbody.innerHTML += `
-                    <tr>
+                    <tr style="background:${rowBg}">
                         <td>${new Date(item.tarih).toLocaleDateString('tr-TR')}</td>
                         <td><span style="background:${item.tipKey === 'sabit' ? '#ffc107' : '#17a2b8'}; color:white; padding:2px 8px; border-radius:10px; font-size:11px;">${item.tip}</span></td>
                         <td>${item.kalemAd}</td>
                         <td>${item.blok}</td>
                         <td>${item.daire}</td>
                         <td>${sakin || '-'}</td>
-                        <td>${(parseFloat(item.tutar)||0).toFixed(2)} ₺</td>
+                        <td>${tutar.toFixed(2)} ₺</td>
+                        <td style="color:${odenen < tutar ? '#e67e22' : '#27ae60'}; font-weight:600;">${odenen.toFixed(2)} ₺</td>
+                        <td>${kalanCell}</td>
                         <td>${item.not}</td>
                         <td><button class="btn btn-danger btn-sm" onclick="deleteGiderItem('${item.collection}','${item.id}')">Sil</button></td>
                     </tr>
@@ -1731,7 +1830,7 @@
             });
         };
 
-        window.deleteGiderItem = async function (col, id) {
+                window.deleteGiderItem = async function (col, id) {
             if (confirm('Bu gideri silmek istediğinizden emin misiniz?')) {
                 try { await deleteDoc(doc(db, col, id)); } catch (e) { console.error(e); }
             }
@@ -1929,21 +2028,36 @@
                 let blokOdenen = 0;
                 html += `<h4 style="margin-top:15px; margin-bottom:6px; color:#555; font-size:13px;">${blok} Blok</h4>`;
                 html += '<table class="checkbox-table" style="font-size:12px;"><thead><tr>' +
-                    '<th style="padding:5px 8px;">Daire</th>' +
-                    '<th style="padding:5px 8px; max-width:100px;">Sakin</th>' +
-                    '<th style="padding:5px 8px;">Tutar</th>' +
-                    '<th style="padding:5px 8px;">Ödendi</th>' +
+                    '<th style="padding:5px 8px; text-align:left;">Daire</th>' +
+                    '<th style="padding:5px 8px; text-align:left;">Sakin</th>' +
+                    '<th style="padding:5px 8px; text-align:left;">Tutar</th>' +
+                    '<th style="padding:5px 8px; text-align:left;">Ödenen</th>' +
+                    '<th style="padding:5px 8px; text-align:left;">Kalan</th>' +
                     '</tr></thead><tbody>';
 
                 bloklar[blok].forEach(no => {
                     const sakin = getSakinAdi(blok, no);
-                    const paid = window.giderler.some(g => g.kalemId === kalemId && g.blok === blok && String(g.daire) === String(no));
-                    if (paid) { blokOdenen++; odenenToplamSayisi++; }
-                    html += `<tr style="background:${paid ? '#f0fff4' : 'white'}">
+                    const daireBasiTutar = kalem.daireBasinaTutar || 0;
+                    // Tüm ödemeleri topla
+                    const daireOdemeleri = window.giderler.filter(g => g.kalemId === kalemId && g.blok === blok && String(g.daire) === String(no));
+                    const toplamOdenen = daireOdemeleri.reduce((s, g) => s + (parseFloat(g.odenenTutar) || 0), 0);
+                    const kalan = daireBasiTutar - toplamOdenen;
+                    const tamOdendi = daireOdemeleri.length > 0 && kalan <= 0.001;
+                    const kismiOdendi = daireOdemeleri.length > 0 && toplamOdenen > 0 && !tamOdendi;
+                    // Grafik için: sadece tam ödenmiş daireler sayılır
+                    if (tamOdendi) { blokOdenen++; odenenToplamSayisi++; }
+                    const rowBg = tamOdendi ? '#f0fff4' : (kismiOdendi ? '#fffbf0' : 'white');
+                    const kalanCell = tamOdendi
+                        ? '<span style="color:#28a745;font-size:16px;font-weight:bold;">✓</span>'
+                        : (daireOdemeleri.length > 0
+                            ? `<span style="color:#dc3545;font-weight:600;">${kalan.toFixed(2)} ₺</span>`
+                            : `<span style="color:#bbb;">${daireBasiTutar.toFixed(2)} ₺</span>`);
+                    html += `<tr style="background:${rowBg}">
                         <td style="padding:5px 8px;"><strong>${blok}${no}</strong></td>
-                        <td style="font-size:10px; color:#666; padding:5px 8px; max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sakin || '-'}</td>
-                        <td style="padding:5px 8px;">${(kalem.daireBasinaTutar||0).toFixed(2)} ₺</td>
-                        <td style="padding:5px 8px; text-align:center;">${paid ? '<span style="color:#28a745;font-size:16px;font-weight:bold;">✓</span>' : '<span style="color:#ddd;">·</span>'}</td>
+                        <td style="padding:5px 8px; color:#666; font-size:11px; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sakin || '-'}</td>
+                        <td style="padding:5px 8px;">${daireBasiTutar.toFixed(2)} ₺</td>
+                        <td style="padding:5px 8px; color:${toplamOdenen > 0 ? '#27ae60' : '#bbb'}; font-weight:600;">${toplamOdenen > 0 ? toplamOdenen.toFixed(2) + ' ₺' : '-'}</td>
+                        <td style="padding:5px 8px; text-align:left;">${kalanCell}</td>
                     </tr>`;
                 });
                 html += '</tbody></table>';
@@ -2232,6 +2346,7 @@
             window.aidatlar.forEach(a => { if (a.tarih) yillarSet.add(a.tarih.substring(0, 4)); });
             window.giderler.forEach(g => { if (g.tarih) yillarSet.add(g.tarih.substring(0, 4)); });
             window.sabitGiderler.forEach(g => { if (g.tarih) yillarSet.add(g.tarih.substring(0, 4)); });
+            window.giderKalemleri.forEach(k => { if (k.createdAt) yillarSet.add(k.createdAt.substring(0, 4)); });
 
             let yillar = Array.from(yillarSet).sort();
             if (yillar.length === 0) {
@@ -2247,39 +2362,55 @@
                             <th style="padding:12px 10px; color:white; font-weight:700;">Yıl</th>
                             <th style="padding:12px 10px; color:white; font-weight:700;">Devreden Bakiye</th>
                             <th style="padding:12px 10px; color:white; font-weight:700;">Aidat Geliri</th>
-                            <th style="padding:12px 10px; color:white; font-weight:700;">Daire B. Gelir</th>
                             <th style="padding:12px 10px; color:white; font-weight:700;">Sabit Giderler</th>
-                            <th style="padding:12px 10px; color:white; font-weight:700;">Yıl Sonu Kasa*</th>
+                            <th style="padding:12px 10px; color:white; font-weight:700;">Daire Başı Gelir</th>
+                            <th style="padding:12px 10px; color:white; font-weight:700;">Ekstra Giderler</th>
+                            <th style="padding:12px 10px; color:white; font-weight:700;">Yıl Sonu Kasa</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
 
+            // 2025 yılı sabit devreden kasa bakiyesi
+            const SABIT_2025_KASA = 36879.90;
+            // 2025 yılını listeye ekle (veri olmasa da gösterilsin)
+            if (!yillar.includes('2025')) yillar = ['2025', ...yillar.filter(y => y >= '2025')].concat(yillar.filter(y => y < '2025')).filter((v,i,a)=>a.indexOf(v)===i).sort();
             let devreden = 0;
 
-            yillar.forEach(yil => {
-                const aidatGelir = window.aidatlar.filter(a => a.tarih && a.tarih.startsWith(yil))
-                    .reduce((sum, a) => sum + parseFloat(a.tutar), 0);
-                const daireGelir = window.giderler.filter(g => g.tarih && g.tarih.startsWith(yil))
-                    .reduce((sum, g) => sum + parseFloat(g.tutar), 0);
-                const sabitGider = window.sabitGiderler.filter(g => g.tarih && g.tarih.startsWith(yil))
-                    .reduce((sum, g) => sum + parseFloat(g.tutar), 0);
-                // Gider kalemleri de gider olarak hesaplanır (tarih yok, sadece o yıl için toplam ekle)
-                const giderKalemiGider = window.giderKalemleri
+            yillar.forEach((yil, idx) => {
+                // Aidat geliri: o yıl tarihli tüm aidat ödemeleri
+                const aidatGelir = window.aidatlar
+                    .filter(a => a.tarih && a.tarih.startsWith(yil))
+                    .reduce((sum, a) => sum + (parseFloat(a.tutar) || 0), 0);
+
+                // Sabit giderler: o yıl tarihli sabit gider ödemeleri
+                const sabitGider = window.sabitGiderler
+                    .filter(g => g.tarih && g.tarih.startsWith(yil))
+                    .reduce((sum, g) => sum + (parseFloat(g.tutar) || 0), 0);
+
+                // Daire başı gelir: o yıl tarihli ekstra gider ödemeleri (ödenen tutar toplamı)
+                const daireBasiGelir = window.giderler
+                    .filter(g => g.tarih && g.tarih.startsWith(yil))
+                    .reduce((sum, g) => sum + (parseFloat(g.odenenTutar) || 0), 0);
+
+                // Ekstra giderler: o yıl oluşturulan gider kalemlerinin toplam tutarı
+                const ekstraGider = window.giderKalemleri
                     .filter(k => k.createdAt && k.createdAt.startsWith(yil))
-                    .reduce((sum, k) => sum + parseFloat(k.toplamTutar || 0), 0);
+                    .reduce((sum, k) => sum + (parseFloat(k.toplamTutar) || 0), 0);
 
-                const toplamGelir = devreden + aidatGelir + daireGelir;
-                const toplamGider = sabitGider + giderKalemiGider;
-                const yilSonuKasa = toplamGelir - toplamGider;
+                // 2025 için yıl sonu kasa sabit olarak belirlendi
+                let yilSonuKasa = devreden + aidatGelir - sabitGider + daireBasiGelir - ekstraGider;
+                if (yil === '2025') yilSonuKasa = SABIT_2025_KASA;
 
-                html += `<tr>
-                    <td style="padding:10px; border-bottom:1px solid #ddd;"><strong>${yil}</strong></td>
-                    <td style="padding:10px; border-bottom:1px solid #ddd; color:#856404;">${devreden.toFixed(2)} ₺</td>
-                    <td style="padding:10px; border-bottom:1px solid #ddd; color:#155724;">${aidatGelir.toFixed(2)} ₺</td>
-                    <td style="padding:10px; border-bottom:1px solid #ddd; color:#155724;">+${daireGelir.toFixed(2)} ₺</td>
-                    <td style="padding:10px; border-bottom:1px solid #ddd; color:#721c24;">-${toplamGider.toFixed(2)} ₺</td>
-                    <td style="padding:10px; border-bottom:1px solid #ddd; font-weight:bold; color:${yilSonuKasa >= 0 ? '#155724' : '#721c24'}">${yilSonuKasa.toFixed(2)} ₺</td>
+                const rowBg = idx % 2 === 0 ? 'white' : '#f9f9ff';
+                html += `<tr style="background:${rowBg}">
+                    <td style="padding:10px; border-bottom:1px solid #eee;"><strong>${yil}</strong></td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; color:${devreden >= 0 ? '#856404' : '#721c24'}; font-weight:600;">${devreden >= 0 ? '' : ''}${devreden.toFixed(2)} ₺</td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; color:#155724;">+${aidatGelir.toFixed(2)} ₺</td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; color:#721c24;">-${sabitGider.toFixed(2)} ₺</td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; color:#155724;">+${daireBasiGelir.toFixed(2)} ₺</td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; color:#721c24;">-${ekstraGider.toFixed(2)} ₺</td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; font-weight:700; font-size:15px; color:${yilSonuKasa >= 0 ? '#155724' : '#721c24'};">${yilSonuKasa.toFixed(2)} ₺</td>
                 </tr>`;
 
                 devreden = yilSonuKasa;
@@ -2287,13 +2418,20 @@
 
             html += '</tbody></table></div>';
 
+            const kasaRenk = devreden >= 0 ? '#155724' : '#721c24';
+            const kasaBg = devreden >= 0 ? '#d4edda' : '#f8d7da';
+            const kasaBorder = devreden >= 0 ? '#c3e6cb' : '#f5c6cb';
             html += `
-                <div style="margin-top:15px; padding:15px; background:${devreden >= 0 ? '#d4edda' : '#f8d7da'}; 
-                     border-radius:8px; font-size:18px; font-weight:bold; color:${devreden >= 0 ? '#155724' : '#721c24'}; 
-                     border:1px solid ${devreden >= 0 ? '#c3e6cb' : '#f5c6cb'};">
-                     Mevcut Güncel Kasa Durumu: ${devreden.toFixed(2)} ₺
+                <div style="margin-top:15px; padding:15px; background:${kasaBg};
+                     border-radius:8px; font-size:18px; font-weight:bold; color:${kasaRenk};
+                     border:1px solid ${kasaBorder};">
+                     💰 Güncel Kasa Durumu: ${devreden.toFixed(2)} ₺
                 </div>
-                <p style="font-size:11px; color:#888; margin-top:5px;">* Yıl sonu kasası otomatik olarak bir sonraki yıla devreder.</p>
+                <p style="font-size:11px; color:#888; margin-top:8px;">
+                    Aidat Geliri ve Daire Başı Gelir → Gelir olarak eklenir.<br>
+                    Sabit Giderler ve Ekstra Giderler → Gider olarak düşülür.<br>
+                    Yıl Sonu Kasa = Devreden + Aidat Geliri − Sabit Giderler + Daire Başı Gelir − Ekstra Giderler
+                </p>
             `;
 
             container.innerHTML = html;
