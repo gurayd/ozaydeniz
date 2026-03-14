@@ -1114,7 +1114,8 @@
 
         const daireYapisi = [];
         ['A', 'B', 'C'].forEach(blok => {
-            for (let i = 1; i <= 14; i++) {
+            const maks = (blok === 'B') ? 13 : 14;
+            for (let i = 1; i <= maks; i++) {
                 daireYapisi.push({ blok: blok, no: i });
             }
         });
@@ -1209,12 +1210,19 @@
         }
 
         // Blok seçildiğinde daire selectlerini güncelle (sakin adıyla)
+        // Dükkan olan daire numaraları (blok bazlı)
+        const DUKKAN_MAP = { 'A': [1, 2], 'B': [], 'C': [1, 2] };
+        window.DUKKAN_MAP = DUKKAN_MAP;
+
         window.populateDaireSelect = function (blokSelectId, daireSelectId) {
             const blok = document.getElementById(blokSelectId).value;
             const daireSelect = document.getElementById(daireSelectId);
             daireSelect.innerHTML = '<option value="">Seçiniz</option>';
             if (blok) {
-                for (let i = 1; i <= 14; i++) {
+                const maks = (blok === 'B') ? 13 : 14; // B blokta 14. daire yok
+                const dukkanlar = DUKKAN_MAP[blok] || [];
+                for (let i = 1; i <= maks; i++) {
+                    if (dukkanlar.includes(i)) continue; // Dükkan olanları atla
                     const sakin = getSakinAdi(blok, i);
                     const label = sakin ? `Daire ${i} - ${sakin}` : `Daire ${i}`;
                     daireSelect.innerHTML += `<option value="${i}">${label}</option>`;
@@ -1257,7 +1265,8 @@
             ['A', 'B', 'C'].forEach(blok => {
                 const grid = document.getElementById(`daireGrid${blok}`);
                 grid.innerHTML = '';
-                for (let i = 1; i <= 14; i++) {
+                const maks = (blok === 'B') ? 13 : 14;
+                for (let i = 1; i <= maks; i++) {
                     const daireData = window.daireler.find(d => d.blok === blok && d.no == i) || {};
                     const card = document.createElement('div');
                     card.className = 'daire-card';
@@ -1358,17 +1367,16 @@
         };
 
         // ===== DÜKKAN AİDAT FONKSİYONLARI =====
-        const dukkanNolari = [1, 2, 13, 14]; // Her blok için dükkan no'ları
-        window.dukkanNolari = dukkanNolari;
-
-        // Dükkan select'i doldur (blok seçilince)
+        // Dükkan select'i doldur — sadece A ve C blok, no 1 ve 2
         window.populateDukkanSelect = function() {
             const blok = document.getElementById('aidatBlok').value;
             const sel = document.getElementById('aidatDukkan');
             if (!sel) return;
             sel.innerHTML = '<option value="">— veya dükkan seç —</option>';
             if (!blok) return;
-            dukkanNolari.forEach(no => {
+            const dukkanlar = DUKKAN_MAP[blok] || [];
+            if (dukkanlar.length === 0) return; // B blokta dükkan yok
+            dukkanlar.forEach(no => {
                 const sakin = getSakinAdi(blok, no);
                 const label = sakin ? `${blok}${no} - ${sakin}` : `${blok}${no}`;
                 sel.innerHTML += `<option value="${no}">${label}</option>`;
