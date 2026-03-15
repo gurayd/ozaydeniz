@@ -742,6 +742,8 @@
                         <th>Sakin</th>
                         <th>Ay</th>
                         <th>Tutar</th>
+                        <th>Ödenen</th>
+                        <th>Kalan</th>
                         <th>İşlem</th>
                     </tr>
                 </thead>
@@ -1535,7 +1537,7 @@
             tbody.innerHTML = '';
 
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999;padding:20px;">Kayıt bulunamadı</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#999;padding:20px;">Kayıt bulunamadı</td></tr>';
                 return;
             }
             filtered.sort((a, b) => {
@@ -1546,15 +1548,35 @@
             }).forEach(aidat => {
                 const sakin = getSakinAdi(aidat.blok, aidat.daire);
                 const tutar = parseFloat(aidat.tutar) || 0;
+                // Beklenen tutar: dükkan mı daire mi?
+                const isDukkanNo = (window.DUKKAN_MAP && window.DUKKAN_MAP[aidat.blok] || []).includes(parseInt(aidat.daire));
+                let beklenen = tutar;
+                if (isDukkanNo) {
+                    beklenen = (window.dukkanAidatAyarlari && window.dukkanAidatAyarlari[aidat.yil]) ? parseFloat(window.dukkanAidatAyarlari[aidat.yil]) : tutar;
+                } else {
+                    beklenen = (window.aidatAyarlari && window.aidatAyarlari[aidat.yil]) ? parseFloat(window.aidatAyarlari[aidat.yil]) : tutar;
+                }
+                const odenen = parseFloat(aidat.odenenTutar) || tutar;
+                const kalan = beklenen - odenen;
+                const tamOdendi = kalan <= 0.01;
+                const odenenCell = tamOdendi
+                    ? `<span style="color:#28a745;font-weight:700;">${odenen.toFixed(2)} ₺</span>`
+                    : `<span style="color:#e67e22;font-weight:700;">${odenen.toFixed(2)} ₺</span>`;
+                const kalanCell = tamOdendi
+                    ? `<span style="color:#28a745;font-size:16px;font-weight:bold;">✓</span>`
+                    : `<span style="color:#dc3545;font-weight:700;">-${kalan.toFixed(2)} ₺</span>`;
+                const rowBg = tamOdendi ? '#f0fff4' : (odenen > 0 ? '#fffbf0' : 'white');
                 tbody.innerHTML += `
-                    <tr>
+                    <tr style="background:${rowBg}">
                         <td>${aidat.tarih ? new Date(aidat.tarih).toLocaleDateString('tr-TR') : '-'}</td>
                         <td>${aidat.yil}</td>
                         <td>${aidat.blok}</td>
                         <td>${aidat.daire}</td>
                         <td>${sakin || '-'}</td>
                         <td><span style="background:#e8f4fd;color:#1a5276;padding:3px 8px;border-radius:10px;font-size:12px;font-weight:600;">${aidat.ay}</span></td>
-                        <td><strong>${tutar.toFixed(2)} ₺</strong></td>
+                        <td><strong>${beklenen.toFixed(2)} ₺</strong></td>
+                        <td>${odenenCell}</td>
+                        <td style="text-align:center;">${kalanCell}</td>
                         <td><button class="btn btn-danger btn-sm" onclick="deleteAidat('${aidat.id}')">Sil</button></td>
                     </tr>
                 `;
