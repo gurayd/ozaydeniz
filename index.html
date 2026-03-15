@@ -884,8 +884,9 @@
                         <th>Blok</th>
                         <th>Daire</th>
                         <th>Sakin</th>
-                        <th>Tutar</th>
-                        <th>Ödenen</th>
+                        <th>Toplam Tutar</th>
+                        <th>Bu Taksit</th>
+                        <th>Toplam Ödenen</th>
                         <th>Kalan</th>
                         <th>Not</th>
                         <th>İşlem</th>
@@ -1160,6 +1161,7 @@
             filterGiderTable();
             renderGiderTablo();
             if (window.renderYillikOzet) window.renderYillikOzet();
+            if (window.updateGiderKalanInfo) updateGiderKalanInfo();
         });
 
         onSnapshot(collection(db, "sabitGiderler"), (snapshot) => {
@@ -1687,22 +1689,16 @@
                     not: not_, tip: 'daire',
                     createdAt: new Date().toISOString()
                 });
+                // Sadece ödeme alanlarını sıfırla, kalem/blok/daire seçimi kalsın
                 document.getElementById('giderOdenenTutar').value = '';
                 document.getElementById('giderNot').value = '';
-                document.getElementById('giderTarih').value = '';
                 setTodayDates();
-                updateGiderKalanInfo();
                 const yeniKalan = kalan - buSeferOdenen;
                 if (yeniKalan <= 0.01) {
                     alert(`✓ ${blok}${daire} — "${kalem.ad}" gideri tam olarak ödendi!`);
                 } else {
                     alert(`Ödeme kaydedildi. Kalan: ${yeniKalan.toFixed(2)} ₺`);
                 }
-                return;
-                // (reset aşağıda - eski kod kaldırıldı)
-                document.getElementById('giderForm').reset();
-                setTodayDates();
-                alert('Gider kaydedildi!');
             } catch (error) {
                 console.error('Hata:', error);
                 alert('Kayıt sırasında hata oluştu!');
@@ -1808,6 +1804,8 @@
                     blok: g.blok || '-',
                     daire: g.daire || '-',
                     tutar: g.tutar,
+                    odenenTutar: g.odenenTutar,
+                    createdAt: g.createdAt || g.tarih,
                     not: g.not || '-',
                     collection: 'giderler'
                 });
@@ -1847,22 +1845,36 @@
 
             allItems.sort((a, b) => new Date(b.tarih) - new Date(a.tarih)).forEach(item => {
                 const sakin = (item.blok !== '-' && item.daire !== '-') ? getSakinAdi(item.blok, item.daire) : '';
-                const tutar = parseFloat(item.tutar) || 0;
-                let odenen, kalan, tamOdendi;
+                const toplamTutar = parseFloat(item.tutar) || 0;
+                let buTaksit, toplamOdenen, kalan, tamOdendi;
+
                 if (item.tipKey === 'daire') {
-                    const tumOdemeler = window.giderler.filter(g =>
-                        g.kalemId === item.kalemId && g.blok === item.blok && String(g.daire) === String(item.daire)
-                    );
-                    odenen = tumOdemeler.reduce((s, g) => s + (parseFloat(g.odenenTutar) || 0), 0);
-                    kalan = tutar - odenen;
+                    // Bu kaydın kendine özgü taksit tutarı
+                    buTaksit = parseFloat(item.odenenTutar) || 0;
+                    // Bu kayıt dahil, bu tarihe kadar yapılmış tüm ödemeler
+                    // (createdAt sırasına göre bu kayda kadar olan toplamı bul)
+                    const tumOdemeler = window.giderler
+                        .filter(g => g.kalemId === item.kalemId && g.blok === item.blok && String(g.daire) === String(item.daire))
+                        .sort((a, b) => new Date(a.createdAt || a.tarih) - new Date(b.createdAt || b.tarih));
+                    toplamOdenen = tumOdemeler.reduce((s, g) => s + (parseFloat(g.odenenTutar) || 0), 0);
+                    kalan = toplamTutar - toplamOdenen;
                     tamOdendi = kalan <= 0.001;
                 } else {
-                    odenen = tutar; kalan = 0; tamOdendi = true;
+                    buTaksit = toplamTutar;
+                    toplamOdenen = toplamTutar;
+                    kalan = 0;
+                    tamOdendi = true;
                 }
-                const rowBg = tamOdendi ? '#f0fff4' : (odenen > 0 ? '#fffbf0' : 'white');
+
+                const rowBg = tamOdendi ? '#f0fff4' : (toplamOdenen > 0 ? '#fffbf0' : 'white');
                 const kalanCell = tamOdendi
                     ? '<span style="color:#28a745;font-size:16px;font-weight:bold;">✓</span>'
                     : `<span style="color:#dc3545;font-weight:600;">${kalan.toFixed(2)} ₺</span>`;
+                const buTaksitCell = item.tipKey === 'daire'
+                    ? `<span style="color:#667eea;font-weight:700;">${buTaksit.toFixed(2)} ₺</span>`
+                    : `<span style="color:#27ae60;font-weight:600;">${buTaksit.toFixed(2)} ₺</span>`;
+                const toplamOdenenCell = `<span style="color:${tamOdendi ? '#27ae60' : '#e67e22'};font-weight:600;">${toplamOdenen.toFixed(2)} ₺</span>`;
+
                 tbody.innerHTML += `
                     <tr style="background:${rowBg}">
                         <td>${new Date(item.tarih).toLocaleDateString('tr-TR')}</td>
@@ -1871,9 +1883,10 @@
                         <td>${item.blok}</td>
                         <td>${item.daire}</td>
                         <td>${sakin || '-'}</td>
-                        <td>${tutar.toFixed(2)} ₺</td>
-                        <td style="color:${odenen < tutar ? '#e67e22' : '#27ae60'}; font-weight:600;">${odenen.toFixed(2)} ₺</td>
-                        <td>${kalanCell}</td>
+                        <td>${toplamTutar.toFixed(2)} ₺</td>
+                        <td>${buTaksitCell}</td>
+                        <td>${toplamOdenenCell}</td>
+                        <td style="text-align:center;">${kalanCell}</td>
                         <td>${item.not}</td>
                         <td><button class="btn btn-danger btn-sm" onclick="deleteGiderItem('${item.collection}','${item.id}')">Sil</button></td>
                     </tr>
