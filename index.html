@@ -673,15 +673,23 @@
                             </select>
                         </div>
                     </div>
-                    <!-- Sütun 4: Aylık Tutar + Dükkan Tutar -->
+                    <!-- Sütun 4: Aylık Tutar + Dükkan Tutar + Ödenen -->
                     <div class="aidat-col">
                         <div class="form-group">
                             <label>Aylık Tutar (₺)</label>
                             <input type="number" id="aidatTutar" step="0.01" readonly style="background:#f0f0f0;">
                         </div>
                         <div class="form-group">
+                            <label>Ödenen Tutar (₺)</label>
+                            <input type="number" id="aidatOdenenTutar" step="0.01" placeholder="Otomatik dolar, değiştirilebilir">
+                        </div>
+                        <div class="form-group">
                             <label>Dükkan Aylık Tutar (₺)</label>
                             <input type="number" id="aidatDukkanTutar" step="0.01" readonly style="background:#f0f0f0;">
+                        </div>
+                        <div class="form-group">
+                            <label>Dükkan Ödenen Tutar (₺)</label>
+                            <input type="number" id="aidatDukkanOdenenTutar" step="0.01" placeholder="Otomatik dolar, değiştirilebilir">
                         </div>
                     </div>
                 </div>
@@ -1357,9 +1365,12 @@
         window.updateAidatTutar = function () {
             const yil = document.getElementById('aidatYil').value;
             if (yil && window.aidatAyarlari && window.aidatAyarlari[yil]) {
-                document.getElementById('aidatTutar').value = window.aidatAyarlari[yil];
+                const t = window.aidatAyarlari[yil];
+                document.getElementById('aidatTutar').value = t;
+                document.getElementById('aidatOdenenTutar').value = t;
             } else {
                 document.getElementById('aidatTutar').value = '';
+                document.getElementById('aidatOdenenTutar').value = '';
             }
             // Dükkan tutarını da güncelle
             if (window.updateDukkanAidatTutar) updateDukkanAidatTutar();
@@ -1389,6 +1400,7 @@
             if (daire) {
                 document.getElementById('aidatDukkan').value = '';
                 document.getElementById('aidatDukkanTutar').value = '';
+                document.getElementById('aidatDukkanOdenenTutar').value = '';
             }
             updateAidatTutar();
         };
@@ -1399,6 +1411,7 @@
             if (dukkan) {
                 document.getElementById('aidatDaire').value = '';
                 document.getElementById('aidatTutar').value = '';
+                document.getElementById('aidatOdenenTutar').value = '';
             }
             updateDukkanAidatTutar();
         };
@@ -1407,9 +1420,12 @@
             const yil = document.getElementById('aidatYil').value;
             const dukkan = document.getElementById('aidatDukkan') ? document.getElementById('aidatDukkan').value : '';
             if (yil && dukkan && window.dukkanAidatAyarlari && window.dukkanAidatAyarlari[yil]) {
-                document.getElementById('aidatDukkanTutar').value = window.dukkanAidatAyarlari[yil];
+                const t = window.dukkanAidatAyarlari[yil];
+                document.getElementById('aidatDukkanTutar').value = t;
+                document.getElementById('aidatDukkanOdenenTutar').value = t;
             } else if (dukkan) {
                 document.getElementById('aidatDukkanTutar').value = '';
+                document.getElementById('aidatDukkanOdenenTutar').value = '';
             }
             hesaplaToplam();
         };
@@ -1454,6 +1470,9 @@
             const aylikTutar = isDukkan
                 ? parseFloat(document.getElementById('aidatDukkanTutar').value)
                 : parseFloat(document.getElementById('aidatTutar').value);
+            const odenenTutar = isDukkan
+                ? (parseFloat(document.getElementById('aidatDukkanOdenenTutar').value) || aylikTutar)
+                : (parseFloat(document.getElementById('aidatOdenenTutar').value) || aylikTutar);
 
             if (!yil || !blok || !secilenNo || !tarih || !ay || !aylikTutar) {
                 alert('Lütfen tüm alanları doldurun! (Daire veya dükkan seçin)');
@@ -1474,7 +1493,7 @@
 
             try {
                 await addDoc(collection(db, "aidatlar"), {
-                    yil, blok, daire: secilenNo, tutar: aylikTutar, tarih, ay,
+                    yil, blok, daire: secilenNo, tutar: aylikTutar, odenenTutar, tarih, ay,
                     tip: isDukkan ? 'dukkan' : 'daire',
                     createdAt: new Date().toISOString()
                 });
@@ -1482,6 +1501,8 @@
                 document.getElementById('aidatAySelect').value = '';
                 document.getElementById('aidatDukkan').value = '';
                 document.getElementById('aidatDukkanTutar').value = '';
+                document.getElementById('aidatDukkanOdenenTutar').value = '';
+                document.getElementById('aidatOdenenTutar').value = '';
                 document.getElementById('toplamAidatTutar').textContent = '0.00';
                 setTodayDates();
                 alert('Aidat kaydedildi!');
@@ -1913,13 +1934,32 @@
                 html += `<tr><td style="padding:5px 8px;"><strong>${blok}${i}</strong></td>` +
                     `<td style="font-size:10px; color:#666; padding:5px 8px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sakin || '-'}</td>`;
                 aylar.forEach((ay, ayIdx) => {
-                    const paid = window.aidatlar.some(a => 
-                        a.blok === blok && 
-                        String(a.daire) === String(i) && 
-                        a.ay === ay && 
+                    // Dükkan mı daire mi? Beklenen tutarı buna göre belirle
+                    const isDukkanNo = (window.DUKKAN_MAP && window.DUKKAN_MAP[blok] || []).includes(i);
+                    const daireKayitlari = window.aidatlar.filter(a =>
+                        a.blok === blok &&
+                        String(a.daire) === String(i) &&
+                        a.ay === ay &&
                         String(a.yil) === String(yil));
-                    if (paid) odenenSayilari[ayIdx]++;
-                    html += `<td style="padding:4px 2px; text-align:center;">${paid ? '<span style="color:#28a745;font-size:14px;font-weight:bold;">✓</span>' : '<span style="color:#ddd;font-size:12px;">·</span>'}</td>`;
+                    let beklenenTutar = null;
+                    if (isDukkanNo) {
+                        beklenenTutar = (window.dukkanAidatAyarlari && window.dukkanAidatAyarlari[yil]) ? parseFloat(window.dukkanAidatAyarlari[yil]) : null;
+                    } else {
+                        beklenenTutar = (window.aidatAyarlari && window.aidatAyarlari[yil]) ? parseFloat(window.aidatAyarlari[yil]) : null;
+                    }
+                    const toplamOdenen = daireKayitlari.reduce((s, a) => s + (parseFloat(a.odenenTutar) || parseFloat(a.tutar) || 0), 0);
+                    const tamOdendi = daireKayitlari.length > 0 && beklenenTutar && toplamOdenen >= beklenenTutar - 0.01;
+                    if (tamOdendi) odenenSayilari[ayIdx]++;
+                    let cellHtml;
+                    if (daireKayitlari.length === 0) {
+                        cellHtml = '<span style="color:#eee;font-size:12px;">·</span>';
+                    } else if (tamOdendi) {
+                        cellHtml = `<span style="color:#28a745;font-size:13px;font-weight:bold;">${toplamOdenen.toFixed(0)}</span>`;
+                    } else {
+                        const fark = beklenenTutar ? (toplamOdenen - beklenenTutar) : 0;
+                        cellHtml = `<span style="color:#dc3545;font-size:11px;font-weight:600;">${fark.toFixed(0)}</span>`;
+                    }
+                    html += `<td style="padding:4px 2px; text-align:center;">${cellHtml}</td>`;
                 });
                 html += '</tr>';
             }
