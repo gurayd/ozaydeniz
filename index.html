@@ -1160,6 +1160,7 @@
             snapshot.forEach((d) => { window.giderler.push({ id: d.id, ...d.data() }); });
             filterGiderTable();
             renderGiderTablo();
+            renderGiderKalemleri();
             if (window.renderYillikOzet) window.renderYillikOzet();
             if (window.updateGiderKalanInfo) updateGiderKalanInfo();
         });
@@ -1178,6 +1179,7 @@
             snapshot.forEach((d) => { window.giderKalemleri.push({ id: d.id, ...d.data() }); });
             renderGiderKalemleri();
             updateGiderKalemSelects();
+            if (window.renderYillikOzet) window.renderYillikOzet();
         });
 
         onSnapshot(doc(db, "ayarlar", "aidat"), (docSnap) => {
@@ -1872,13 +1874,13 @@
                     : `<span style="color:#dc3545;font-weight:600;">${kalan.toFixed(2)} ₺</span>`;
                 const buTaksitCell = item.tipKey === 'daire'
                     ? `<span style="color:#667eea;font-weight:700;">${buTaksit.toFixed(2)} ₺</span>`
-                    : `<span style="color:#27ae60;font-weight:600;">${buTaksit.toFixed(2)} ₺</span>`;
+                    : '';
                 const toplamOdenenCell = `<span style="color:${tamOdendi ? '#27ae60' : '#e67e22'};font-weight:600;">${toplamOdenen.toFixed(2)} ₺</span>`;
 
                 tbody.innerHTML += `
                     <tr style="background:${rowBg}">
                         <td>${new Date(item.tarih).toLocaleDateString('tr-TR')}</td>
-                        <td><span style="background:${item.tipKey === 'sabit' ? '#ffc107' : '#17a2b8'}; color:white; padding:2px 8px; border-radius:10px; font-size:11px;">${item.tip}</span></td>
+                        <td><span style="background:${item.tipKey === 'sabit' ? '#e8f4e8' : '#e8f0ff'}; color:${item.tipKey === 'sabit' ? '#2d7a2d' : '#3d5fc4'}; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; border:1px solid ${item.tipKey === 'sabit' ? '#b8ddb8' : '#b8c8f0'};">${item.tip}</span></td>
                         <td>${item.kalemAd}</td>
                         <td>${item.blok}</td>
                         <td>${item.daire}</td>
@@ -2397,11 +2399,27 @@
             list.innerHTML = '';
 
             window.giderKalemleri.forEach(k => {
+                // Bu kaleme ait toplam ödenen tutarı hesapla
+                const toplamOdenen = window.giderler
+                    .filter(g => g.kalemId === k.id)
+                    .reduce((s, g) => s + (parseFloat(g.odenenTutar) || 0), 0);
+                const toplamTutar = parseFloat(k.toplamTutar) || 0;
+                const tamOdendi = toplamTutar > 0 && toplamOdenen >= toplamTutar - 0.01;
+
+                const cardBg = tamOdendi ? '#f0fff4' : 'white';
+                const cardBorder = tamOdendi ? '1.5px solid #a8e6b8' : '1px solid #ddd';
+                const odemeLabel = tamOdendi
+                    ? `<span style="color:#28a745; font-weight:700; font-size:12px;">✓ Ödendi</span>`
+                    : (toplamOdenen > 0
+                        ? `<span style="color:#e67e22; font-weight:600; font-size:12px;">⏳ ${toplamOdenen.toFixed(2)} ₺ / ${toplamTutar.toFixed(2)} ₺</span>`
+                        : `<span style="color:#999; font-size:12px;">Ödeme yok</span>`);
+
                 list.innerHTML += `
-                    <div class="gider-item">
+                    <div class="gider-item" style="background:${cardBg}; border:${cardBorder};">
                         <div>
-                            <strong>${k.ad}</strong><br>
-                            <small>Toplam: ${k.toplamTutar?.toFixed(2)} ₺ | Daire Başı: ${k.daireBasinaTutar.toFixed(2)} ₺</small><br>
+                            <strong>${k.ad}</strong>
+                            &nbsp;&nbsp;${odemeLabel}<br>
+                            <small>Toplam: ${toplamTutar.toFixed(2)} ₺ | Daire Başı: ${k.daireBasinaTutar.toFixed(2)} ₺</small><br>
                             <small style="color:#666">${k.daireler.length} Daire Katılıyor</small>
                         </div>
                         <button class="btn btn-danger btn-sm" onclick="deleteGiderKalemi('${k.id}')">Sil</button>
